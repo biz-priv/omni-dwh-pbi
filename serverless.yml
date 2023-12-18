@@ -1,0 +1,53 @@
+service: omni-dwh-pbi
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  versionFunctions: true
+  stage: ${opt:stage, 'dev'}
+  region: us-east-1
+  timeout: 30
+  memorySize: 256
+  iam:
+    role:
+      name: omni-coe-table-batch-submitJob-policy-${self:provider.stage}
+      statements:
+        - Effect: Allow
+          Action:
+            - "batch:SubmitJob"
+          Resource: "*"
+
+  vpc:
+    securityGroupIds:
+      - ${ssm:/omni-dw/${self:provider.stage}/lambda/sgId}
+    subnetIds:
+      - ${ssm:/omni-dw/${self:provider.stage}/lambda/subnetA}
+
+package:
+  individually: true
+
+layers:
+    OmniDWH:
+        path: lambdaLayer/lib
+        name: ${self:service}-layer-${self:provider.stage}
+        description: omni-dwh-pbi-services lambda layer for all node modules - ${self:provider.stage}
+        compatibleRuntimes:
+            - nodejs14.x
+            - nodejs18.x
+        retain: false
+
+functions:
+  omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
+
+resources:
+  Resources:
+    OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
+    OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
+    OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
+    OmniCoeTableJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobBatchTaskExecutionRole}
+    OmniCoeTableBatchLogGroup: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableBatchLogGroup}
+    OmniCoeTableJobDefinition: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobDefinition}
+
+plugins:
+  - serverless-offline

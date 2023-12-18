@@ -1,0 +1,28 @@
+# OmniCoeTableBatchServiceRole:
+#   Type: AWS::IAM::Role
+#   Properties:
+#     AssumeRolePolicyDocument:
+#       Version: '2012-10-17'
+#       Statement:
+#       - Effect: Allow
+#         Principal:
+#           Service: batch.amazonaws.com
+#         Action: sts:AssumeRole
+#     ManagedPolicyArns:
+#       - arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole
+
+# OmniCoeTableComputeEnvironment:
+#   Type: AWS::Batch::ComputeEnvironment
+#   Properties:
+#     ComputeEnvironmentName: omni-coe-table-env-${self:provider.stage}
+#     Type: MANAGED
+#     ServiceRole:
+#       Ref: OmniCoeTableBatchServiceRole
+#     ComputeResources:
+#       MaxvCpus: 256
+#       SecurityGroupIds:
+#         - ${ssm:/omni-dw/${self:provider.stage}/lambda/sgId}
+#       Type: FARGATE
+#       Subnets:
+#         - ${ssm:/omni-dw/${self:provider.stage}/lambda/subnetA}
+#     State: ENABLED
