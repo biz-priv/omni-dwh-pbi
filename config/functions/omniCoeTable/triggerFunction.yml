@@ -1,17 +1,17 @@
 function:
   name: omni-coe-table-batch-trigger-${self:provider.stage}
-  handler: src/batch/trigger-function.handler
-  description: Omni Coe table
+  handler: src/batch/omniCoeTable/trigger-function.handler
+  description: Omni Coe Table  
   package:
     patterns:
       - "!**/*"
-      - "src/batch/*.js"
+      - "src/batch/omniCoeTable/*.js"
   runtime: nodejs18.x
   layers:
     - !Ref OmniCoeTableLayerLambdaLayer
   events:
     - schedule: cron(0 21 * * ? *)
   environment:
-    JOB_DEFINITION: !Ref OmniEpayIntegrationJobDefinition
-    JOB_NAME: omni-epay-integration-reader-job-${self:provider.stage}
-    JOB_QUEUE: !Ref OmniEpayIntegrationJobQueue
+    JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
+    JOB_NAME: omni-coe-table-job-${self:provider.stage}
+    JOB_QUEUE: !Ref OmniCoeTableJobQueue
