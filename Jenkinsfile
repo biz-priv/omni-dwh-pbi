@@ -30,7 +30,7 @@ pipeline {
                     echo "GIT_BRANCH: ${GIT_BRANCH}"
                     sh """
                         npm i
-                        cd lib/nodejs
+                        cd lambdaLayer/lib/nodejs
                         npm i
                     """
                 }

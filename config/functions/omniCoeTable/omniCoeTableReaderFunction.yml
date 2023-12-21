@@ -8,7 +8,7 @@ function:
       - "src/omniCoeTable/*.js"
       - "src/commonFunctions/**"
   runtime: nodejs18.x
-  # layers:
-  #   - !Ref OmniDWHLayerLambdaLayer
+  layers:
+    - !Ref OmniDWHLayerLambdaLayer
   events:
     - schedule: cron(0 21 * * ? *)
