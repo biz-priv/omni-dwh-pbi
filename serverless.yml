@@ -9,20 +9,14 @@ provider:
   region: us-east-1
   timeout: 30
   memorySize: 256
-  iam:
-    role:
-      name: omni-coe-table-batch-submitJob-policy-${self:provider.stage}
-      statements:
-        - Effect: Allow
-          Action:
-            - "batch:SubmitJob"
-          Resource: "*"
-
-  vpc:
-    securityGroupIds:
-      - ${ssm:/omni-dw/${self:provider.stage}/lambda/sgId}
-    subnetIds:
-      - ${ssm:/omni-dw/${self:provider.stage}/lambda/subnetA}
+  # iam:
+  #   role:
+  #     name: omni-coe-table-batch-submitJob-policy-${self:provider.stage}
+  #     statements:
+  #       - Effect: Allow
+  #         Action:
+  #           - "batch:SubmitJob"
+  #         Resource: "*"
 
 package:
   individually: true

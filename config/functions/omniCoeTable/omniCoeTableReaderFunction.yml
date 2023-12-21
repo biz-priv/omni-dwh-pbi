@@ -12,3 +12,5 @@ function:
     - !Ref OmniDWHLayerLambdaLayer
   events:
     - schedule: cron(0 21 * * ? *)
+  environment:      
+    TRACKING_NOTES_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/ddb.tableName}
