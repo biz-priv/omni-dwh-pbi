@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/bizcloud-experts/omni-dwh-pbi/issues"
   },
-  "homepage": "https://github.com/bizcloud-experts/omni-dwh-pbi#readme"
+  "homepage": "https://github.com/bizcloud-experts/omni-dwh-pbi#readme",
+  "dependencies": {
+    "serverless-offline": "^13.3.2"
+  }
 }
