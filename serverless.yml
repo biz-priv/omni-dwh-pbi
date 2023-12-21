@@ -28,7 +28,7 @@ package:
   individually: true
 
 layers:
-    OmniDWH:
+    OmniDWHLayer:
         path: lambdaLayer/lib
         name: ${self:service}-layer-${self:provider.stage}
         description: omni-dwh-pbi-services lambda layer for all node modules - ${self:provider.stage}
@@ -38,16 +38,17 @@ layers:
         retain: false
 
 functions:
-  omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
+  # omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
+  omni_coe_table_reader: ${file(config/functions/omniCoeTable/omniCoeTableReaderFunction.yml):function}
 
-resources:
-  Resources:
-    OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
-    OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
-    OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
-    OmniCoeTableJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobBatchTaskExecutionRole}
-    OmniCoeTableBatchLogGroup: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableBatchLogGroup}
-    OmniCoeTableJobDefinition: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobDefinition}
+# resources:
+#   Resources:
+#     OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
+#     OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
+#     OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
+#     OmniCoeTableJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobBatchTaskExecutionRole}
+#     OmniCoeTableBatchLogGroup: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableBatchLogGroup}
+#     OmniCoeTableJobDefinition: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobDefinition}
 
 plugins:
   - serverless-offline

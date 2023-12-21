@@ -1,0 +1,14 @@
+function:
+  name: omni-coe-table-reader-${self:provider.stage}
+  handler: src/omniCoeTable/index.handler
+  description: Omni Coe Table Reader
+  package:
+    patterns:
+      - "!**/*"
+      - "src/omniCoeTable/*.js"
+      - "src/commonFunctions/**"
+  runtime: nodejs18.x
+  layers:
+    - !Ref OmniDWHLayerLambdaLayer
+  events:
+    - schedule: cron(0 21 * * ? *)
