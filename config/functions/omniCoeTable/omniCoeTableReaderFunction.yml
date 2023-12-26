@@ -8,6 +8,10 @@ function:
       - "src/omniCoeTable/*.js"
       - "src/commonFunctions/**"
   runtime: nodejs18.x
+  events:
+    - sqs:
+        arn: arn:aws:sqs:us-east-1:332281781429:omni-coe-table-reader-queue-dev
+        batchSize: 10
   layers:
     - !Ref OmniDWHLayerLambdaLayer
   environment:      

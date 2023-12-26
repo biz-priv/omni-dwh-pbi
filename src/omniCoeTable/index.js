@@ -1,5 +1,6 @@
 const { executeQuery } = require("../commonFunctions/dynamo");
 exports.handler = async (event) => {
+    console.info("Received event:", JSON.stringify(event));
     //Fetch data from notes table in real time
     const records = event.Records;
     console.log(records);

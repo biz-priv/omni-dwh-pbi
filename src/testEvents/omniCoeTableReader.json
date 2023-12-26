@@ -1,20 +1,22 @@
 {
     "Records": [
       {
-        "messageId": "c80f5d0b-2a1e-4c6c-88c1-ae9d0b6e12c3",
-        "receiptHandle": "AQEBwJnKyrHigUMZj6rYigCgx4CMp8A...",
-        "body": "{\"Records\":[{\"eventName\":\"MODIFY\",\"dynamodb\":{\"Keys\":{\"PK_NoteNo\":{\"S\":\"164563515\"}},\"NewImage\":{\"PK_NoteNo\":{\"S\":\"164563515\"},\"FK_OrderNo\":{\"S\":\"2416454\"},\"ConsolNo\":{\"S\":\"0\"},\"DateTimeEntered\":{\"S\":\"2021-06-14 17:54:11.000\"},\"DMS_TS\":{\"S\":\"2023-09-28 13:27:07.304518\"},\"EventDateTime\":{\"S\":\"2021-06-14 17:54:11.000\"},\"EventTimeZone\":{\"S\":\"\"},\"FK_UserId\":{\"S\":\"EDI204I\"},\"InsertedTimeStamp\":{\"S\":\"2023:09:28 11:02:55\"},\"Note\":{\"S\":\"Leg2: EXDO-LTL-STANDARD  Service: EXDO-STANDARD- Updated\"},\"Priority\":{\"S\":\"N\"},\"PublicNote\":{\"S\":\"N\"}},\"OldImage\":{\"PK_NoteNo\":{\"S\":\"164563515\"},\"FK_OrderNo\":{\"S\":\"2416454\"},\"ConsolNo\":{\"S\":\"0\"},\"DateTimeEntered\":{\"S\":\"2021-06-14 17:54:11.000\"},\"DMS_TS\":{\"S\":\"2023-09-28 13:27:07.304518\"},\"EventDateTime\":{\"S\":\"2021-06-14 17:54:11.000\"},\"EventTimeZone\":{\"S\":\"\"},\"FK_UserId\":{\"S\":\"EDI204I\"},\"InsertedTimeStamp\":{\"S\":\"2023:09:28 11:02:55\"},\"Note\":{\"S\":\"Leg2: EXDO-LTL-STANDARD  Service: EXDO-STANDARD\"},\"Priority\":{\"S\":\"N\"},\"PublicNote\":{\"S\":\"N\"}},\"SequenceNumber\":\"25800000000032085799092\",\"SizeBytes\":2553,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\"},\"eventSourceARN\":\"\"}]}",
+        "messageId": "d8aeb888-8188-47e6-9e4c-994cf40199a7",
+        "receiptHandle": "AQEB9yK/teEVPeTKoqBC+rsdf8Q/KVTpMIt7zryGF+hZEBMqClCNEvjL+D8cadGfY0b6Y6wjRKdHLX7+hjEUlOOwu7Odfd5ue/r6EDv+3Gf2JXHMGAXhJi/nkp6mq3dOSqlixzRpcjfYCFZU67lt6S2S68zPlM3/KP4e4KvOlaA5I48QD3AKNO0E8Jp4UEBm8v2XFUtDueGS0QtS4nlQ1Mzz9BHu6sEiBstFfyR7qoin8uDNWi7U9sSWOcz7JuD/gxao1it/jxlmsxdYVvMkstr7ruLOe2GYYjeQQePbg4g0RRMBBqGIPK/UrCkhvqFx7obj8cCRB6uz1wVOLDKEeH56SrguDkHclziOtSuH+jCv7kqiymSt/aq74xNdZ5fqTnPatz6M9Bsf8lZxouRtvFZenvWIG7aGg7Xg7kWxnyEKzF4=",
+        "body": "{\"ApproximateCreationDateTime\":1703262465,\"Keys\":{\"FK_OrderStatusId\":{\"S\":\"NEW\"},\"PK_NoteNo\":{\"S\":\"164563515\"}},\"NewImage\":{\"PK_NoteNo\":{\"S\":\"164563515\"},\"FK_OrderNo\":{\"S\":\"2416454\"},\"DateTimeEntered\":{\"S\":\"2023-01-01 17:54:11.000\"}",
         "attributes": {
           "ApproximateReceiveCount": "1",
-          "SentTimestamp": "1632823629824",
-          "SenderId": "123456789012",
-          "ApproximateFirstReceiveTimestamp": "1632823630364"
+          "AWSTraceHeader": "Root=1-658967ca-45a29cc8561f0ee909fba0f0;Parent=45de36307aca81dc;Sampled=0;Lineage=cea2507e:0",
+          "SentTimestamp": "1703503819930",
+          "SenderId": "",
+          "ApproximateFirstReceiveTimestamp": "1703503819934"
         },
         "messageAttributes": {},
-        "md5OfBody": "7b270e59b47ff90a553787216d55d91d",
+        "md5OfBody": "dc0dac243247d084668e86a741292feb",
+        "md5OfMessageAttributes": null,
         "eventSource": "aws:sqs",
-        "eventSourceARN": "arn:aws:sqs:region:account-id:queue-name",
-        "awsRegion": "region"
+        "eventSourceARN": "",
+        "awsRegion": "us-east-1"
       }
     ]
   }
