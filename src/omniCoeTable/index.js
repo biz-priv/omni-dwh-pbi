@@ -2,13 +2,14 @@ const { executeQuery } = require("../commonFunctions/dynamo");
 exports.handler = async (event) => {
     //Fetch data from notes table in real time
     const records = event.Records;
+    console.log(records);
     for (const record of records) {
         // Iterate through each record 
         try{
             // Filter records with DateTimeEntered more than 2023-01-01
             const body = JSON.parse(record.body);
             const newImage = body.NewImage;
-            const dateThreshold=process.env.DATE_THRESHOLD
+            let dateThreshold=process.env.DATE_THRESHOLD
             dateThreshold=new Date(dateThreshold)
             const dateTimeEntered= newImage.DateTimeEntered
             if (dateTimeEntered === '' || dateTimeEntered === null || dateTimeEntered === undefined) {
@@ -44,7 +45,7 @@ exports.handler = async (event) => {
                         continue;
                     }
                   } else {
-                    console.info("headerResult has no values");
+                    console.info("header table has no records for this orderno");
                     continue;
                   }
             }
