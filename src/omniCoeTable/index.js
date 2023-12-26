@@ -8,6 +8,7 @@ exports.handler = async (event) => {
         try{
             // Filter records with DateTimeEntered more than 2023-01-01
             const body = JSON.parse(record.body);
+            console.log("body",body)
             const newImage = body.NewImage;
             let dateThreshold=process.env.DATE_THRESHOLD
             dateThreshold=new Date(dateThreshold)
