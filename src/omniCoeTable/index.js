@@ -11,6 +11,7 @@ exports.handler = async (event) => {
             const newImage = body.NewImage;
             let dateThreshold=process.env.DATE_THRESHOLD
             dateThreshold=new Date(dateThreshold)
+            console.log(JSON.stringify(newImage))
             const dateTimeEntered= newImage.DateTimeEntered.S
             if (dateTimeEntered === '' || dateTimeEntered === null || dateTimeEntered === undefined) {
                 continue
