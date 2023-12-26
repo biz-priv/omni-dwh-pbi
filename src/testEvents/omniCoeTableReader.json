@@ -1,0 +1,94 @@
+{
+    "Records": [
+        {
+            "eventName": "MODIFY",
+            "dynamodb": {
+                "Keys": {
+                    "PK_NoteNo": {
+                        "S": "164563515"
+                    }
+                },
+                "NewImage": {
+                    "PK_NoteNo": {
+                      "S": "164563515"
+                    },
+                    "FK_OrderNo": {
+                      "S": "2416454"
+                    },
+                    "ConsolNo": {
+                      "S": "0"
+                    },
+                    "DateTimeEntered": {
+                      "S": "2021-06-14 17:54:11.000"
+                    },
+                    "DMS_TS": {
+                      "S": "2023-09-28 13:27:07.304518"
+                    },
+                    "EventDateTime": {
+                      "S": "2021-06-14 17:54:11.000"
+                    },
+                    "EventTimeZone": {
+                      "S": ""
+                    },
+                    "FK_UserId": {
+                      "S": "EDI204I"
+                    },
+                    "InsertedTimeStamp": {
+                      "S": "2023:09:28 11:02:55"
+                    },
+                    "Note": {
+                      "S": "Leg2: EXDO-LTL-STANDARD  Service: EXDO-STANDARD- Updated"
+                    },
+                    "Priority": {
+                      "S": "N"
+                    },
+                    "PublicNote": {
+                      "S": "N"
+                    }
+                  },
+                "OldImage": {
+                    "PK_NoteNo": {
+                      "S": "164563515"
+                    },
+                    "FK_OrderNo": {
+                      "S": "2416454"
+                    },
+                    "ConsolNo": {
+                      "S": "0"
+                    },
+                    "DateTimeEntered": {
+                      "S": "2021-06-14 17:54:11.000"
+                    },
+                    "DMS_TS": {
+                      "S": "2023-09-28 13:27:07.304518"
+                    },
+                    "EventDateTime": {
+                      "S": "2021-06-14 17:54:11.000"
+                    },
+                    "EventTimeZone": {
+                      "S": ""
+                    },
+                    "FK_UserId": {
+                      "S": "EDI204I"
+                    },
+                    "InsertedTimeStamp": {
+                      "S": "2023:09:28 11:02:55"
+                    },
+                    "Note": {
+                      "S": "Leg2: EXDO-LTL-STANDARD  Service: EXDO-STANDARD"
+                    },
+                    "Priority": {
+                      "S": "N"
+                    },
+                    "PublicNote": {
+                      "S": "N"
+                    }
+                  },
+                "SequenceNumber": "25800000000032085799092",
+                "SizeBytes": 2553,
+                "StreamViewType": "NEW_AND_OLD_IMAGES"
+            },
+            "eventSourceARN": ""
+        }
+    ]
+}
