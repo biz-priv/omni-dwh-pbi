@@ -4,7 +4,7 @@ const {errorResponse} = require('./index');
 const maxRetries = 5;
 const retryDelay = 5000;
 
-const delay = util.promisify(setTimeout); // Promisify setTimeout.
+const delay = util.promisify(setTimeout); 
 
 async function getDbConnection(type = "reader") {
   let retries = 0;

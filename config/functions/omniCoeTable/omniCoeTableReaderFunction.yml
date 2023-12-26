@@ -10,7 +10,9 @@ function:
   runtime: nodejs18.x
   layers:
     - !Ref OmniDWHLayerLambdaLayer
-  events:
-    - schedule: cron(0 21 * * ? *)
   environment:      
     TRACKING_NOTES_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/ddb.tableName}
+    SHIPMENT_HEADER_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/shipment-header/ddb.tableName}  
+    # TRACKING_NOTES_TABLE_NAME: omni-wt-rt-tracking-notes-dev
+    # SHIPMENT_HEADER_TABLE_NAME: omni-wt-rt-shipment-header-dev
+    DATE_THRESHOLD: '2023-01-01'

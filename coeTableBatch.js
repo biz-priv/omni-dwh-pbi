@@ -23,14 +23,7 @@ async function handlerAsyncFunction() {
     }
 }
 async function fetchData(){
-    // Logic to fetch data
-    /*
-    query logic:
-    1. Fetch data from omni-wt-rt-tracking-notes-dev table where the trunc(datetimeentered)>=2023-01-01
-    2. Fetch data from omni-wt-rt-shipment-header-dev where fk orderno matches with omni-wt-rt-tracking-notes-dev pk orderno
-    3. Filter out data where housebill is not zero
-    */
-    const entered_date=process.env.ENTERED_DATE
+    // Logic to fetch data from dynamodb table
     try{
 
     }

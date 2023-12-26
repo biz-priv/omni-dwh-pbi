@@ -32,11 +32,15 @@ layers:
         retain: false
 
 functions:
-  # omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
   omni_coe_table_reader: ${file(config/functions/omniCoeTable/omniCoeTableReaderFunction.yml):function}
+  # omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
 
-# resources:
-#   Resources:
+resources:
+  Resources:
+    omniCoeTableReaderQueue: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderQueue}
+    omniCoeTableReaderDLQ: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderDLQ}
+    omniCoeTableReaderSubscription: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderSubscription}
+    omniCoeTableReaderQueuePolicy: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderQueuePolicy}
 #     OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
 #     OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
 #     OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
