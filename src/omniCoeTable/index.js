@@ -2,7 +2,7 @@ const { executeQuery } = require("../commonFunctions/dynamo");
 exports.handler = async (event) => {
     console.info("Received event:", JSON.stringify(event));
     //Fetch data from notes table in real time
-    const records = event.Records;
+    const records = event.Records;   
     console.log(records);
     for (const record of records) {
         // Iterate through each record 
@@ -21,14 +21,12 @@ exports.handler = async (event) => {
             const curRecordDateTimeEntered=new Date(dateTimeEntered)
             if (curRecordDateTimeEntered>dateThreshold){
                 const orderNo = newImage.FK_OrderNo.S;
-                const referenceParams = {
-                    TableName: 'SHIPMENT_HEADER_TABLE_NAME',
-                    KeyConditionExpression: 'pk_orderno = :orderNo',
-                    ExpressionAttributeValues: {
-                        ':orderNo': orderNo,
-                    },
-                };
-                const headerResult = await executeQuery(referenceParams);
+                const headerparams = {
+                    TableName: process.env.SHIPMENT_HEADER_TABLE_NAME,
+                    KeyConditionExpression: `PK_OrderNo = :orderNo`,
+                    ExpressionAttributeValues: { ":orderNo": { S: orderNo } },
+                  };
+                  const headerResult = await executeQuery(headerparams);
                 const items = headerResult.Items;
                 let housebill;
                 if (items && items.length > 0) {
