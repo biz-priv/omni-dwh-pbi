@@ -1,10 +1,10 @@
-OmniCoeTableJobQueue:
-  Type: AWS::Batch::JobQueue
-  Properties:
-    JobQueueName: omni-coe-table-job-queue-${self:provider.stage}
-    ComputeEnvironmentOrder:
-      - Order: 1
-        ComputeEnvironment:
-          Ref: OmniCoeTableComputeEnvironment
-    State: ENABLED
-    Priority: 1
+# OmniCoeTableJobQueue:
+#   Type: AWS::Batch::JobQueue
+#   Properties:
+#     JobQueueName: omni-coe-table-job-queue-${self:provider.stage}
+#     ComputeEnvironmentOrder:
+#       - Order: 1
+#         ComputeEnvironment:
+#           Ref: OmniCoeTableComputeEnvironment
+#     State: ENABLED
+#     Priority: 1
