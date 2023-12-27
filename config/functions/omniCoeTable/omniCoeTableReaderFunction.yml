@@ -8,10 +8,10 @@ function:
       - "src/omniCoeTable/*.js"
       - "src/commonFunctions/**"
   runtime: nodejs18.x
-  events:
-    - sqs:
-        arn: { "Fn::GetAtt": ["omniCoeTableReaderQueue", "Arn"] }
-        batchSize: 10
+  # events:
+  #   - sqs:
+  #       arn: { "Fn::GetAtt": ["omniCoeTableReaderQueue", "Arn"] }
+  #       batchSize: 10
   layers:
     - !Ref OmniDWHLayerLambdaLayer
   environment:      
