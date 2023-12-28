@@ -1,7 +1,7 @@
 const get = require('lodash.get');
 const { executeQuery } = require("../commonFunctions/dynamo");
-
-exports.handler = async (event) => {
+const {publishErrorMessageToSNS}=require('../commonFunctions/helpers');
+exports.handler = async (event, context) => {
     console.info("Received event:", JSON.stringify(event));
     const records = get(event, 'Records', []);
     console.log(records);
@@ -45,7 +45,8 @@ exports.handler = async (event) => {
                 }
             }
         } catch (error) {
-            console.error(error);
+            const functionName=context.functionName;
+            await publishErrorMessageToSNS(functionName,error);
         }
     }));
 };
