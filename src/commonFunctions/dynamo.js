@@ -1,5 +1,6 @@
 const AWS = require("aws-sdk");
-const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
+// const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
+const DynamoDB = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 const {errorResponse}=require('./helpers')
 
 async function putItem(params) {
