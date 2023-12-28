@@ -14,7 +14,8 @@ function:
         batchSize: 10
   layers:
     - !Ref OmniDWHLayerLambdaLayer
-  environment:      
+  environment:     
+    ERROR_SNS_ARN: ${ssm:/omni-reports/${self:provider.stage}/error-notification/sns/arn} 
     TRACKING_NOTES_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/ddb.tableName}
     SHIPMENT_HEADER_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/shipment-header/ddb.tableName}  
     DATE_THRESHOLD: '2023-01-01'
