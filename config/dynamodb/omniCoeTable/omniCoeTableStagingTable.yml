@@ -2,6 +2,7 @@ omniCoeTableStagingTable:
   Type: AWS::DynamoDB::Table
   Properties:
     TableName: omni-coe-table-staging-table-${self:provider.stage}
+    BillingMode: PAY_PER_REQUEST
     AttributeDefinitions:
       - AttributeName: id
         AttributeType: S  
