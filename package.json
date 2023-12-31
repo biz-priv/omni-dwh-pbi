@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/bizcloud-experts/omni-dwh-pbi#readme",
   "dependencies": {
+    "lodash.get": "^4.4.2",
     "serverless-offline": "^13.3.2",
-    "lodash.get": "^4.4.2"
+    "uuid": "^9.0.1"
   }
 }

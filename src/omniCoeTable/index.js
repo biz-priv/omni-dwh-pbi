@@ -1,6 +1,14 @@
 const get = require('lodash.get');
-const { executeQuery } = require("../commonFunctions/dynamo");
-const {publishErrorMessageToSNS}=require('../commonFunctions/helpers');
+const {
+    executeQuery
+} = require("../commonFunctions/dynamo");
+const {
+    publishErrorMessageToSNS
+} = require('../commonFunctions/helpers');
+const {
+    v4: uuidv4
+} = require("uuid");
+
 exports.handler = async (event, context) => {
     console.info("Received event:", JSON.stringify(event));
     const records = get(event, 'Records', []);
@@ -12,41 +20,55 @@ exports.handler = async (event, context) => {
             const newImage = get(body, 'NewImage', {});
             let dateThreshold = process.env.DATE_THRESHOLD;
             dateThreshold = new Date(dateThreshold);
-            console.log("threshold date",dateThreshold);
+            console.log("threshold date", dateThreshold);
             console.log(JSON.stringify(newImage));
             const dateTimeEntered = get(newImage, 'DateTimeEntered.S', '');
             if (!dateTimeEntered) {
                 return null;
             }
             const curRecordDateTimeEntered = new Date(dateTimeEntered);
-            console.log("curRecordDateTimeEntered",curRecordDateTimeEntered)
+            console.log("curRecordDateTimeEntered", curRecordDateTimeEntered)
             if (curRecordDateTimeEntered > dateThreshold) {
                 const orderNo = get(newImage, 'FK_OrderNo.S', '');
                 const headerparams = {
                     TableName: process.env.SHIPMENT_HEADER_TABLE_NAME,
                     KeyConditionExpression: `PK_OrderNo = :orderNo`,
-                    ExpressionAttributeValues: { ":orderNo": { S: orderNo } },
+                    ExpressionAttributeValues: {
+                        ":orderNo": {
+                            S: orderNo
+                        }
+                    },
                 };
                 const headerResult = await executeQuery(headerparams);
                 const items = get(headerResult, 'Items', []);
                 console.log("items", items);
                 let housebill = get(items, '[0].Housebill.S', '');
                 if (housebill !== '0') {
-                    const payload = {
-                        User_id: get(newImage, 'FK_UserId.S', ''),
-                        file_nbr: orderNo,
-                        date_entered: curRecordDateTimeEntered,
-                        housebill: housebill,
-                    };
-                    console.log(payload);
-                    // insert into db
+                    let userid = get(newImage, 'FK_UserId.S', '');
+                    let file_nbr = orderNo;
+                    let date_entered = curRecordDateTimeEntered;
+                    if (userid !== null &&
+                        file_nbr !== null &&
+                        date_entered !== null && housebill !== null) {
+                        const payload = {
+                            id: uuidv4(),
+                            User_id: userid,
+                            file_nbr: file_nbr,
+                            date_entered: date_entered,
+                            housebill: housebill,
+                            status: "Pending"
+                        };
+                        console.log(payload);
+                        // insert into db
+                    }
                 } else {
                     console.info("housebill value is zero");
                 }
             }
         } catch (error) {
-            const functionName=context.functionName;
-            await publishErrorMessageToSNS(functionName,error);
+            const functionName = context.functionName;
+            console.log("error",error);
+            //await publishErrorMessageToSNS(functionName, error);
         }
     }));
 };
