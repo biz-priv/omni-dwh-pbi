@@ -5,7 +5,8 @@ function:
   package:
     patterns:
       - "!**/*"
-      - "src/batch/omniCoeTable/*.js"
+      - "src/omniCoeTable/*.js"
+      - "src/commonFunctions/**"
   runtime: nodejs18.x
   layers:
     - !Ref OmniDWHLayerLambdaLayer
