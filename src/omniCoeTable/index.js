@@ -10,6 +10,7 @@ const {
 } = require("uuid");
 
 exports.handler = async (event, context) => {
+    console.log("test message")
     console.info("Received event:", JSON.stringify(event));
     const records = get(event, 'Records', []);
     console.log(records);
