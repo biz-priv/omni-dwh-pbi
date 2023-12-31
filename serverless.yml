@@ -9,6 +9,14 @@ provider:
   region: us-east-1
   timeout: 30
   memorySize: 256
+  iam:
+    role:
+      name: omni-coe-table-batch-submitJob-policy-${self:provider.stage}
+      statements:
+        - Effect: Allow
+          Action:
+            - "batch:SubmitJob"
+          Resource: "*"
 
 package:
   individually: true
@@ -25,6 +33,7 @@ layers:
 
 functions:
   omni_coe_table_reader: ${file(config/functions/omniCoeTable/omniCoeTableReaderFunction.yml):function}
+  omni_coe_table_reader_batch_trigger: ${file(config/functions/omniCoeTable/omniCoeTableTriggerFunction.yml):function}
 
 resources:
   Resources:
@@ -33,6 +42,12 @@ resources:
     omniCoeTableReaderSubscription: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderSubscription}
     omniCoeTableReaderQueuePolicy: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderQueuePolicy}
     omniCoeTableStagingTable: ${file(config/dynamodb/omniCoeTable/omniCoeTableStagingTable.yml):omniCoeTableStagingTable}
+    OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
+    OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
+    OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
+    OmniCoeTableJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobBatchTaskExecutionRole}
+    OmniCoeTableBatchLogGroup: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableBatchLogGroup}
+    OmniCoeTableJobDefinition: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobDefinition}
 
 plugins:
   - serverless-offline
