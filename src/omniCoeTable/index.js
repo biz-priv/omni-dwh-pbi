@@ -1,6 +1,6 @@
 const get = require('lodash.get');
 const {
-    executeQuery
+    executeQuery, putItem
 } = require("../commonFunctions/dynamo");
 const {
     publishErrorMessageToSNS
@@ -48,19 +48,25 @@ exports.handler = async (event, context) => {
                     let userid = get(newImage, 'FK_UserId.S', '');
                     let file_nbr = orderNo;
                     let date_entered = curRecordDateTimeEntered;
+                    console.log(typeof date_entered);
                     if (userid !== null &&
                         file_nbr !== null &&
                         date_entered !== null && housebill !== null) {
-                        const payload = {
-                            id: uuidv4(),
-                            User_id: userid,
-                            file_nbr: file_nbr,
-                            date_entered: date_entered,
-                            housebill: housebill,
-                            status: "Pending"
-                        };
-                        console.log(payload);
                         // insert into db
+                        //await putItem('omni-coe-table-staging-table-dev',payload);
+                        const omniCoeTableParams = {
+                            TableName: 'omni-coe-table-staging-table-dev',
+                            Item: {
+                                id: uuidv4(),
+                                User_id: userid,
+                                file_nbr: file_nbr,
+                                date_entered: JSON.stringify(date_entered),
+                                housebill: housebill,
+                                status: "Pending"
+                            }
+                          };
+                        await putItem(omniCoeTableParams);
+                        console.info("record is inserted successfully");
                     }
                 } else {
                     console.info("housebill value is zero");

@@ -6,8 +6,17 @@ omniCoeTableStagingTable:
     AttributeDefinitions:
       - AttributeName: id
         AttributeType: S  
+      - AttributeName: status
+        AttributeType: S
     KeySchema:
       - AttributeName: id
         KeyType: HASH 
     StreamSpecification:
       StreamViewType: NEW_AND_OLD_IMAGES
+    GlobalSecondaryIndexes:
+      - IndexName: status-index
+        KeySchema:
+          - AttributeName: status
+            KeyType: HASH
+        Projection:
+          ProjectionType: ALL

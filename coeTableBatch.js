@@ -1,12 +1,10 @@
 const { promisify } = require('util');
 const get = require('lodash.get');
-const map=require('lodash.map');
-const moment = require("moment");
-const { getDbConnection, executeQuery, endDbConnection } = require("./src/commonFunctions/db")
-const {errorResponse}=require("./src/commonFunctions/index")
-const {publishErrorMessageToSNS} = require("./src/commonFunctions/helpers")
-const AWS = require('aws-sdk');
-const sns = new AWS.SNS();
+// const { getDbConnection, executeQuery, endDbConnection } = require("./src/commonFunctions/db")
+// const {errorResponse}=require("./src/commonFunctions/index")
+// const {publishErrorMessageToSNS} = require("./src/commonFunctions/helpers")
+// const AWS = require('aws-sdk');
+// const sns = new AWS.SNS();
 /*
 Fetch data from the dynamodb table
 insert into a redshift table
@@ -23,7 +21,7 @@ async function handlerAsyncFunction() {
     }
 }
 async function fetchData(){
-    // Logic to fetch data from dynamodb table
+    // Fetch data from dynamodb table where the status is Pending
     try{
 
     }

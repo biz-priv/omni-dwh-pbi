@@ -1,10 +1,11 @@
 const AWS = require("aws-sdk");
 const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
+const DynamoDBClient = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
 const {errorResponse}=require('./helpers')
 
 async function putItem(params) {
   try {
-    return await DynamoDB.put(params).promise();
+    return await DynamoDBClient.put(params).promise();
   } catch (e) {
     console.error("Put Item Error:", e, "\nPut params:", params);
     throw errorResponse(500, "Error while putting item.");

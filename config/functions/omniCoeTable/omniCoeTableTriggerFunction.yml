@@ -1,6 +1,6 @@
 function:
   name: omni-coe-table-batch-trigger-${self:provider.stage}
-  handler: src/batch/omniCoeTable/trigger-function.handler
+  handler: src/omniCoeTable/trigger-function.handler
   description: Omni Coe Table  
   package:
     patterns:
