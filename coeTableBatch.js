@@ -22,11 +22,27 @@ async function handlerAsyncFunction() {
 }
 async function fetchData(){
     // Fetch data from dynamodb table where the status is Pending
+    // const tableName=process.env.COE_TABLE_STAGING_TABLE_NAME;
+    const tableName='omni-coe-table-staging-table-dev';
+    const indexName = 'status-index';
+    const params = {
+        TableName: tableName,
+        IndexName: indexName,
+        KeyConditionExpression: '#status = :status',
+        ExpressionAttributeNames: {
+            '#status': 'status'
+        },
+        ExpressionAttributeValues: {
+            ':status': 'Pending'
+        }
+    };
     try{
-
+        const result = await executeQuery(params);
+        const items = result.Items;
+        console.log('Fetched items:', items);
     }
     catch(error){
-
+        throw errorResponse(500, "Error while executing query.");
     }
 }
 
