@@ -76,7 +76,7 @@ exports.handler = async (event, context) => {
         } catch (error) {
             const functionName = context.functionName;
             console.log("error", error);
-            //await publishErrorMessageToSNS(functionName, error);
+            await publishErrorMessageToSNS(functionName, error);
         }
     }));
 };

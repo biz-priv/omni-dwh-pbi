@@ -23,7 +23,7 @@ OmniCoeTableJobBatchTaskExecutionRole:
                 - "logs:PutLogEvents"
                 - "sns:Publish"
               Resource: "*"
-      - PolicyName: omni-coe-table-mysql-policy-${self:provider.stage}
+      - PolicyName: omni-coe-table-data-retrieval-policy-${self:provider.stage}
         PolicyDocument:
           Statement:
             - Effect: Allow
@@ -36,6 +36,12 @@ OmniCoeTableJobBatchTaskExecutionRole:
                 - mysql:Insert
                 - mysql:Update
                 - mysql:Delete
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
               Resource: "*"
 
 OmniCoeTableJobDefinition:
@@ -79,6 +85,8 @@ OmniCoeTableJobDefinition:
           Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_STATUS_INDEX}
         - Name: COE_REDSHIFT_TABLE
           Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_REDSHIFT_TABLE}
+        - Name: ERROR_SNS_ARN
+          Value: ${ssm:/omni-reports/${self:provider.stage}/error-notification/sns/arn}
       FargatePlatformConfiguration:
         PlatformVersion: 1.3.0
       LogConfiguration:
