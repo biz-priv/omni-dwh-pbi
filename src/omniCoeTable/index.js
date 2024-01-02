@@ -56,7 +56,7 @@ exports.handler = async (event, context) => {
                         housebill !== '') {
                         // insert into db
                         const omniCoeTableParams = {
-                            TableName: 'omni-coe-table-staging-table-dev',
+                            TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
                             Item: {
                                 id: uuidv4(),
                                 User_id: userid,
