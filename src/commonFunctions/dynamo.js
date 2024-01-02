@@ -22,7 +22,7 @@ async function getItem(params) {
 }
 async function updateItem(params){
   try{
-      await DynamoDB.update(params).promise();
+      await DynamoDBClient.update(params).promise();
   } catch(e){
     console.error("Query Item Error:", e, "\nQuery params:", params);
     throw errorResponse(500, "Error while executing query.");
