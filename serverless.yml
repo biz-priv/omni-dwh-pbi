@@ -11,12 +11,25 @@ provider:
   memorySize: 256
   iam:
     role:
-      name: omni-coe-table-batch-submitJob-policy-${self:provider.stage}
+      name: omni-coe-table-${self:provider.stage}-role
       statements:
-        - Effect: Allow
-          Action:
-            - "batch:SubmitJob"
-          Resource: "*"
+      - 
+        Effect: Allow
+        Action:
+        - "batch:SubmitJob"
+        Resource: 
+        - "*"
+      - 
+        Effect: Allow
+        Action:
+        - "dynamodb:Query"
+        - "dynamodb:Scan"
+        - "dynamodb:GetItem"
+        - "dynamodb:PutItem"
+        - "dynamodb:UpdateItem"
+        - "dynamodb:DeleteItem"
+        Resource: 
+        - "*" 
 
 package:
   individually: true
