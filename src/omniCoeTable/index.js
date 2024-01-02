@@ -1,6 +1,7 @@
 const get = require('lodash.get');
 const {
-    executeQuery, putItem
+    executeQuery,
+    putItem
 } = require("../commonFunctions/dynamo");
 const {
     publishErrorMessageToSNS
@@ -10,7 +11,6 @@ const {
 } = require("uuid");
 
 exports.handler = async (event, context) => {
-    console.log("test message")
     console.info("Received event:", JSON.stringify(event));
     const records = get(event, 'Records', []);
     console.log(records);
@@ -29,6 +29,7 @@ exports.handler = async (event, context) => {
             }
             const curRecordDateTimeEntered = new Date(dateTimeEntered);
             console.log("curRecordDateTimeEntered", curRecordDateTimeEntered)
+            console.log("dateThreshold",dateThreshold)
             if (curRecordDateTimeEntered > dateThreshold) {
                 const orderNo = get(newImage, 'FK_OrderNo.S', '');
                 const headerparams = {
@@ -49,22 +50,22 @@ exports.handler = async (event, context) => {
                     let file_nbr = orderNo;
                     let date_entered = curRecordDateTimeEntered;
                     console.log(typeof date_entered);
-                    if (userid !== null &&
-                        file_nbr !== null &&
-                        date_entered !== null && housebill !== null) {
+                    if (userid !== '' &&
+                        file_nbr !== '' &&
+                        date_entered !== '' &&
+                        housebill !== '') {
                         // insert into db
-                        //await putItem('omni-coe-table-staging-table-dev',payload);
                         const omniCoeTableParams = {
                             TableName: 'omni-coe-table-staging-table-dev',
                             Item: {
                                 id: uuidv4(),
                                 User_id: userid,
                                 file_nbr: file_nbr,
-                                date_entered: JSON.stringify(date_entered),
+                                date_entered: JSON.stringify(curRecordDateTimeEntered),
                                 housebill: housebill,
                                 status: "Pending"
                             }
-                          };
+                        };
                         await putItem(omniCoeTableParams);
                         console.info("record is inserted successfully");
                     }
@@ -74,7 +75,7 @@ exports.handler = async (event, context) => {
             }
         } catch (error) {
             const functionName = context.functionName;
-            console.log("error",error);
+            console.log("error", error);
             //await publishErrorMessageToSNS(functionName, error);
         }
     }));

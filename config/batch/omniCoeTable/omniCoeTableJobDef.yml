@@ -62,17 +62,23 @@ OmniCoeTableJobDefinition:
         - Name: ENV_STAGE_NAME
           Value: ${self:provider.stage}
         - Name: DB_HOST
-          Value: 'omni-dw-prod.cnimhrgrtodg.us-east-1.redshift.amazonaws.com'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_HOST}
         - Name: DB_PORT
-          Value: '5439'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_PORT}
         - Name: DB_USER
-          Value: 'bcesys_account'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_USER}
         - Name: DB_PASSWORD
-          Value: '123BcEsyS#@!'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_PASSWORD}
         - Name: DB_DATABASE
-          Value: 'prod_datamodel'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_DATABASE}
         - Name: ENTERED_DATE
-          Value: '2023-01-01'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/ENTERED_DATE}
+        - Name: COE_TABLE_STAGING_TABLE_NAME
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_NAME}
+        - Name: COE_TABLE_STAGING_TABLE_STATUS_INDEX
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_STATUS_INDEX}
+        - Name: COE_REDSHIFT_TABLE
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_REDSHIFT_TABLE}
       FargatePlatformConfiguration:
         PlatformVersion: 1.3.0
       LogConfiguration:

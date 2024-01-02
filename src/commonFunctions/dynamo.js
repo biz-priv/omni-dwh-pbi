@@ -20,6 +20,14 @@ async function getItem(params) {
     throw errorResponse(500, "Error while getting item.");
   }
 }
+async function updateItem(params){
+  try{
+      await DynamoDB.update(params).promise();
+  } catch(e){
+    console.error("Query Item Error:", e, "\nQuery params:", params);
+    throw errorResponse(500, "Error while executing query.");
+  }
+}
 
 async function executeQuery(params) {
   try {
@@ -33,5 +41,6 @@ async function executeQuery(params) {
 module.exports = {
   putItem,
   getItem,
+  updateItem,
   executeQuery
 };
