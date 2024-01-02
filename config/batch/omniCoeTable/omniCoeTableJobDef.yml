@@ -50,7 +50,7 @@ OmniCoeTableJobDefinition:
     ContainerProperties:
       Command:
         - node
-        - coeTablebatch.js
+        - coeTableBatch.js
       ResourceRequirements:
         - Value: 1
           Type: VCPU
