@@ -1,5 +1,9 @@
 const get = require('lodash.get');
 const {publishErrorMessageToSNS}=require("./src/commonFunctions/helpers");
+const {executeQuery, updateItem}=require('./src/commonFunctions/dynamo');
+const {connectToRedshift,executeQueryOnRedshift, disconnectFromRedshift}=require('./src/commonFunctions/redshift');
+const AWS = require('aws-sdk');
+const sns = new AWS.SNS();
 /*
 1. Fetch data from the dynamodb table where status is pending
 2. Insert records into Redshift table
