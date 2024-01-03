@@ -30,6 +30,10 @@ provider:
         - "dynamodb:DeleteItem"
         Resource: 
         - "*" 
+      - Effect: Allow
+        Action:
+          - "events:ListRules"
+        Resource: "arn:aws:events:us-east-1:332281781429:rule/*"
 
 package:
   individually: true
