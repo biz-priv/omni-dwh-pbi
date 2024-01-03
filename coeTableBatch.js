@@ -20,7 +20,7 @@ async function handlerAsyncFunction() {
     }
     } catch (error) {
         const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
-      //await publishErrorMessageToSNS(functionName,error);
+      await publishErrorMessageToSNS(functionName,error);
       process.exit(1);
     }
 }
