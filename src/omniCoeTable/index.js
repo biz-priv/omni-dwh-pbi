@@ -21,15 +21,11 @@ exports.handler = async (event, context) => {
             const newImage = get(body, 'NewImage', {});
             let dateThreshold = process.env.DATE_THRESHOLD;
             dateThreshold = new Date(dateThreshold);
-            console.info("threshold date", dateThreshold);
-            console.info(JSON.stringify(newImage));
             const dateTimeEntered = get(newImage, 'DateTimeEntered.S', '');
             if (!dateTimeEntered) {
                 return null;
             }
             const curRecordDateTimeEntered = new Date(dateTimeEntered);
-            console.info("curRecordDateTimeEntered", curRecordDateTimeEntered)
-            console.info("dateThreshold",dateThreshold)
             if (curRecordDateTimeEntered > dateThreshold) {
                 const orderNo = get(newImage, 'FK_OrderNo.S', '');
                 const headerparams = {
