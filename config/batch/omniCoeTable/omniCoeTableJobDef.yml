@@ -34,7 +34,17 @@ OmniCoeTableJobBatchTaskExecutionRole:
                 - dynamodb:PutItem
                 - dynamodb:UpdateItem
                 - dynamodb:DeleteItem
-              Resource: "*"
+              Resource: 
+                - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-coe-table-staging-table-${self:provider.stage}']]
+      - PolicyName: omni-coe-table-redshift-update-batch-task-policy-${self:provider.stage}
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+              - 'redshift:*'
+              - 'redshift-serverless:*'
+            Resource: 
+              - !Join ['', ['arn:aws:redshift:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':namespace:aa8190c0-9f2e-4e7c-a92d-c535460f552e']]
 
 OmniCoeTableJobDefinition:
   Type: AWS::Batch::JobDefinition

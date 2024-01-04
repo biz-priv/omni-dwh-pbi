@@ -29,7 +29,9 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
         Resource: 
-        - Fn::GetAtt: [omniCoeTableStagingTable, Arn]
+        - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-coe-table-staging-table-${self:provider.stage}']]
+        - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-wt-rt-tracking-notes-${self:provider.stage}']]
+        - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-wt-rt-shipment-header-${self:provider.stage}']]
 
 package:
   individually: true
