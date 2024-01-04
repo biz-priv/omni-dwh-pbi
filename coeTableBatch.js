@@ -119,7 +119,7 @@ async function insertData(data) {
         const updateParams = {
             TableName: dynamodbTableName,
             Key: {
-                id: get(record, 'id.S', ''), 
+                id: get(item, 'id.S', ''), 
             },
             UpdateExpression: 'SET #status = :newStatus',
             ExpressionAttributeNames: {
@@ -130,7 +130,7 @@ async function insertData(data) {
             },
         };
         await updateItem(updateParams);
-        console.info(`Record with id ${record.id.S} updated in DynamoDB`);
+        console.info(`Record with id ${item.id.S} updated in DynamoDB`);
       }));
     } catch (error) {
       console.error('Error inserting data:', error);
