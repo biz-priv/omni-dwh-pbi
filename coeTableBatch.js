@@ -49,33 +49,6 @@ async function fetchData(){
     }
 }
 
-// async function updateStatusInDynamoDB(recordsToUpdate) {
-//     const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
-//     try {
-//         await Promise.all(recordsToUpdate.map(async (record) => {
-//             const updateParams = {
-//                 TableName: dynamodbTableName,
-//                 Key: {
-//                     id: get(record, 'id.S', ''), 
-//                 },
-//                 UpdateExpression: 'SET #status = :newStatus',
-//                 ExpressionAttributeNames: {
-//                     '#status': 'status',
-//                 },
-//                 ExpressionAttributeValues: {
-//                     ':newStatus': 'Completed'
-//                 },
-//             };
-//             await updateItem(updateParams);
-//             console.info(`Record with id ${record.id.S} updated in DynamoDB`);
-//         }));
-//         console.info('All records updated in DynamoDB');
-//     } catch (error) {
-//         console.error('Error updating records in DynamoDB:', error);
-//         throw error;
-//     }
-// }
-
 async function insertData(data) {
     const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
     const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
