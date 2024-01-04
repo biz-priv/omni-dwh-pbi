@@ -71,7 +71,7 @@ exports.handler = async (event, context) => {
             }
         } catch (error) {
             const functionName = context.functionName;
-            console.info("error", error);
+            console.info("Error generated in the omniCoeTable, Error details:", error);
             await publishErrorMessageToSNS(functionName, error);
         }
     }));
