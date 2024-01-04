@@ -29,7 +29,7 @@ provider:
         - "dynamodb:UpdateItem"
         - "dynamodb:DeleteItem"
         Resource: 
-        - "*" 
+        - Fn::GetAtt: [omniCoeTableStagingTable, Arn]
 
 package:
   individually: true

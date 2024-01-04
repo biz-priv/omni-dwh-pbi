@@ -12,7 +12,7 @@ const client = new Client({
 async function connectToRedshift() {
   try {
     await client.connect();
-    console.log('Connected to Redshift');
+    console.info('Connected to Redshift');
   } catch (error) {
     console.error('Error connecting to Redshift:', error);
     throw errorResponse(500, 'Error connecting to Redshift.');
@@ -22,7 +22,7 @@ async function connectToRedshift() {
 async function disconnectFromRedshift() {
   try {
     await client.end();
-    console.log('Disconnected from Redshift');
+    console.info('Disconnected from Redshift');
   } catch (error) {
     console.error('Error disconnecting from Redshift:', error);
     throw errorResponse(500, 'Error disconnecting from Redshift.');

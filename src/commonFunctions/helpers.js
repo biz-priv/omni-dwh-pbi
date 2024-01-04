@@ -17,7 +17,7 @@ async function publishErrorMessageToSNS(functionName,error) {
   };
   try {
     await sns.publish(params).promise();
-    console.log('Error message published to SNS successfully.');
+    console.info('Error message published to SNS successfully.');
   } catch (err) {
     console.error('Error publishing message to SNS:', err);
   }

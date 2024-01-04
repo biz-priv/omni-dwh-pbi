@@ -16,7 +16,7 @@ async function handlerAsyncFunction() {
     const recordsToProcess = await fetchData();
     if (recordsToProcess.length > 0) {
         await insertData(recordsToProcess);
-        await updateStatusInDynamoDB(recordsToProcess);
+        //await updateStatusInDynamoDB(recordsToProcess);
     }
     } catch (error) {
         const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
@@ -44,46 +44,46 @@ async function fetchData(){
         return get(result, 'Items', []);
     }
     catch(error){
-        console.log(error);
+        console.error("An error occurred while attempting to fetch data from the Omni COE staging table(Function name:fetchData, fileName:coeTableBatch.js). Error details:", error);
         throw error;
     }
 }
 
-async function updateStatusInDynamoDB(recordsToUpdate) {
-    const tableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
-    try {
-        await Promise.all(recordsToUpdate.map(async (record) => {
-            const updateParams = {
-                TableName: tableName,
-                Key: {
-                    id: get(record, 'id.S', ''), 
-                },
-                UpdateExpression: 'SET #status = :newStatus',
-                ExpressionAttributeNames: {
-                    '#status': 'status',
-                },
-                ExpressionAttributeValues: {
-                    ':newStatus': 'Completed'
-                },
-            };
-            await updateItem(updateParams);
-            console.log(`Record with id ${record.id.S} updated in DynamoDB`);
-        }));
-        console.log('All records updated in DynamoDB');
-    } catch (error) {
-        console.error('Error updating records in DynamoDB:', error);
-        throw error;
-    }
-}
+// async function updateStatusInDynamoDB(recordsToUpdate) {
+//     const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
+//     try {
+//         await Promise.all(recordsToUpdate.map(async (record) => {
+//             const updateParams = {
+//                 TableName: dynamodbTableName,
+//                 Key: {
+//                     id: get(record, 'id.S', ''), 
+//                 },
+//                 UpdateExpression: 'SET #status = :newStatus',
+//                 ExpressionAttributeNames: {
+//                     '#status': 'status',
+//                 },
+//                 ExpressionAttributeValues: {
+//                     ':newStatus': 'Completed'
+//                 },
+//             };
+//             await updateItem(updateParams);
+//             console.info(`Record with id ${record.id.S} updated in DynamoDB`);
+//         }));
+//         console.info('All records updated in DynamoDB');
+//     } catch (error) {
+//         console.error('Error updating records in DynamoDB:', error);
+//         throw error;
+//     }
+// }
 
 async function insertData(data) {
-    const tableName=process.env.COE_REDSHIFT_TABLE
+    const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
+    const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
     try {
       await connectToRedshift();
-  
       const results = await Promise.all(data.map(async (item) => {
         const query = `
-          INSERT INTO ${tableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
+          INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
           SELECT
               $1 AS userid,
               $2 AS housebill,
@@ -93,7 +93,7 @@ async function insertData(data) {
               CURRENT_TIMESTAMP AS load_update_date
           WHERE NOT EXISTS (
               SELECT 1
-              FROM ${tableName}
+              FROM ${redshiftTableName}
               WHERE
                   userid = $5 AND
                   housebill = $6 AND
@@ -101,7 +101,7 @@ async function insertData(data) {
                   file_nbr = $8
           );
         `;
-  
+            
         const values = [
           item.User_id.S,
           item.housebill.S,
@@ -113,9 +113,25 @@ async function insertData(data) {
           item.file_nbr.S,
         ];
         
-        return executeQueryOnRedshift(query, values);
+        await executeQueryOnRedshift(query, values);
+        console.info('All data inserted successfully:');
+        // Update the status flag column in the dynamodb table
+        const updateParams = {
+            TableName: dynamodbTableName,
+            Key: {
+                id: get(record, 'id.S', ''), 
+            },
+            UpdateExpression: 'SET #status = :newStatus',
+            ExpressionAttributeNames: {
+                '#status': 'status',
+            },
+            ExpressionAttributeValues: {
+                ':newStatus': 'Completed'
+            },
+        };
+        await updateItem(updateParams);
+        console.info(`Record with id ${record.id.S} updated in DynamoDB`);
       }));
-      console.log('All data inserted successfully:');
     } catch (error) {
       console.error('Error inserting data:', error);
       throw error

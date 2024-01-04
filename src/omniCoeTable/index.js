@@ -13,23 +13,23 @@ const {
 exports.handler = async (event, context) => {
     console.info("Received event:", JSON.stringify(event));
     const records = get(event, 'Records', []);
-    console.log(records);
+    console.info(records);
     await Promise.all(records.map(async (record) => {
         try {
             const body = JSON.parse(get(record, 'body', '{}'));
-            console.log("body", body);
+            console.info("body", body);
             const newImage = get(body, 'NewImage', {});
             let dateThreshold = process.env.DATE_THRESHOLD;
             dateThreshold = new Date(dateThreshold);
-            console.log("threshold date", dateThreshold);
-            console.log(JSON.stringify(newImage));
+            console.info("threshold date", dateThreshold);
+            console.info(JSON.stringify(newImage));
             const dateTimeEntered = get(newImage, 'DateTimeEntered.S', '');
             if (!dateTimeEntered) {
                 return null;
             }
             const curRecordDateTimeEntered = new Date(dateTimeEntered);
-            console.log("curRecordDateTimeEntered", curRecordDateTimeEntered)
-            console.log("dateThreshold",dateThreshold)
+            console.info("curRecordDateTimeEntered", curRecordDateTimeEntered)
+            console.info("dateThreshold",dateThreshold)
             if (curRecordDateTimeEntered > dateThreshold) {
                 const orderNo = get(newImage, 'FK_OrderNo.S', '');
                 const headerparams = {
@@ -43,13 +43,13 @@ exports.handler = async (event, context) => {
                 };
                 const headerResult = await executeQuery(headerparams);
                 const items = get(headerResult, 'Items', []);
-                console.log("items", items);
+                console.info("items", items);
                 let housebill = get(items, '[0].Housebill.S', '');
                 if (housebill !== '0') {
                     let userid = get(newImage, 'FK_UserId.S', '');
                     let file_nbr = orderNo;
                     let date_entered = curRecordDateTimeEntered;
-                    console.log(typeof date_entered);
+                    console.info(typeof date_entered);
                     if (userid !== '' &&
                         file_nbr !== '' &&
                         date_entered !== '' &&
@@ -75,7 +75,7 @@ exports.handler = async (event, context) => {
             }
         } catch (error) {
             const functionName = context.functionName;
-            console.log("error", error);
+            console.info("error", error);
             await publishErrorMessageToSNS(functionName, error);
         }
     }));

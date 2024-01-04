@@ -28,14 +28,6 @@ OmniCoeTableJobBatchTaskExecutionRole:
           Statement:
             - Effect: Allow
               Action:
-                - rds-db:connect
-                - rds:DescribeDBInstances
-                - rds:ListTagsForResource
-                - mysql:Query
-                - mysql:Select
-                - mysql:Insert
-                - mysql:Update
-                - mysql:Delete
                 - dynamodb:Query
                 - dynamodb:Scan
                 - dynamodb:GetItem

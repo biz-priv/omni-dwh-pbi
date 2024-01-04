@@ -9,7 +9,7 @@ exports.handler = async (event) => {
             jobQueue: process.env.JOB_QUEUE,
         };
         const data = await batch.submitJob(params).promise();
-        console.log("Job submitted successfully:", data);
+        console.info("Job submitted successfully:", data);
         return {
             "message": "Job submitted successfully:"
         };
