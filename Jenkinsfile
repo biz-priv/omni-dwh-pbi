@@ -42,7 +42,7 @@ pipeline {
                 anyOf {
                     branch 'master';
                     branch 'develop';
-                    branch 'batch-job-error-testing';
+                    branch 'feature/batchJobErrorTesting';
                 }
                 expression {
                     return true;
