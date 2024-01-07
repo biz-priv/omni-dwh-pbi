@@ -19,9 +19,10 @@ async function handlerAsyncFunction() {
         //await updateStatusInDynamoDB(recordsToProcess);
     }
     } catch (error) {
-        const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
-      await publishErrorMessageToSNS(functionName,error);
-      process.exit(1);
+      console.log("in the catch block");
+      //   const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
+      // await publishErrorMessageToSNS(functionName,error);
+      // process.exit(1);
     }
 }
 async function fetchData(){
