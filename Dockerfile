@@ -6,4 +6,4 @@ COPY . /app
 
 RUN npm install
 
-CMD [ "node", "coeTableBatch.js" ]
+CMD [ "node", "coeTablebaatch.js" ]
