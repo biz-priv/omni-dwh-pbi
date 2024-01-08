@@ -16,7 +16,6 @@ async function handlerAsyncFunction() {
     const recordsToProcess = await fetchData();
     if (recordsToProcess.length > 0) {
         await insertData(recordsToProcess);
-        //await updateStatusInDynamoDB(recordsToProcess);
     }
     } catch (error) {
         const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
