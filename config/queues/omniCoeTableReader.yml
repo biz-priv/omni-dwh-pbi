@@ -1,0 +1,43 @@
+omniCoeTableReaderDLQ:
+  Type: AWS::SQS::Queue
+  Properties:
+    QueueName: omni-coe-table-reader-DLQ-${self:provider.stage}
+
+omniCoeTableReaderQueue:
+  Type: "AWS::SQS::Queue"
+  Properties:
+    QueueName: omni-coe-table-reader-queue-${self:provider.stage}
+    VisibilityTimeout: 300
+    RedrivePolicy:
+      deadLetterTargetArn: !GetAtt omniCoeTableReaderDLQ.Arn
+      maxReceiveCount: 3
+
+omniCoeTableReaderQueuePolicy:
+  Type: AWS::SQS::QueuePolicy
+  Properties:
+    Queues:
+      - !Ref omniCoeTableReaderQueue
+    PolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Sid: "Allow SNS publish to SQS"
+          Effect: Allow
+          Principal:
+            Service: "sns.amazonaws.com"
+          Resource: !GetAtt omniCoeTableReaderQueue.Arn
+          Action: SQS:SendMessage
+          Condition:
+            "ForAnyValue:ArnEquals":
+              aws:SourceArn:
+                - ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/sns.arn}
+              
+omniCoeTableReaderSubscription:
+  Type: AWS::SNS::Subscription
+  Properties:
+    TopicArn: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/sns.arn}
+    Endpoint: !GetAtt 
+      - omniCoeTableReaderQueue
+      - Arn
+    Protocol: sqs
+    RawMessageDelivery: "true"
+

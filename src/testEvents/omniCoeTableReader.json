@@ -1,0 +1,29 @@
+{
+    "Records": [
+        {
+            "messageId": "a63e894e-744e-4e43-a364-f43b97565bbb",
+            "receiptHandle": "AQEBqDMJ2KcbMjJbGkfBEFqfbWpMlAfcUE7Us4NR5dMZxLh/nWF1uSyWYNUnvYiDHXc/Mi6ucUT/7kTRGhn0ffQje+q1LVTUEmCZA48oh9kKczbS25/Ay5u2JvcmSJxKA5Qm6oRwC6Gdaon1Qv8kpRfyZnC54KnaMBmWnZhnnbE54PTXgHW01lbTy36zs2/CYTtMMQRXgkj3qCFkpM3eJSRrsz3Wz+XSLdC4RO1fVv+gRAHqa8kkmJnJxP6K+ttZ8cF1Hf1P82Iz/nzl0sXWeC5KD++RQMt/b1O+JKUVqH+KNfoh9FYGc1KRbZ+C10e/44W4SSvSUGTjGM9pY6E0Gl3t9KFgulm49NlY2jDLrvwjas0EVl50WFxKae71DhTHChzZii8btHyrTIPDtb8tomM5vWfe2sMWhgY8D3rd+45blw0=",
+            "body": "{\"ApproximateCreationDateTime\":1703632709,\"Keys\":{\"PK_NoteNo\":{\"S\":\"16456351400000\"},\"FK_OrderNo\":{\"S\":\"2416454\"}},\"NewImage\":{\"PK_NoteNo\":{\"S\":\"16456351400000\"},\"FK_OrderNo\":{\"S\":\"2416454\"},\"EventDateTime\":{\"S\":\"2021-06-14 17:54:11.000\"},\"Priority\":{\"S\":\"N\"},\"InsertedTimeStamp\":{\"S\":\"2023:09:28 11:02:55\"},\"Note\":{\"S\":\"Test data\"},\"PublicNote\":{\"S\":\"N\"},\"DMS_TS\":{\"S\":\"2023-09-28 13:27:07.304518\"},\"EventTimeZone\":{\"S\":\"\"},\"DateTimeEntered\":{\"S\":\"2023-02-14 17:54:11.000\"},\"FK_UserId\":{\"S\":\"EDI204I\"},\"ConsolNo\":{\"S\":\"0\"}},\"SequenceNumber\":\"2426315100000000061538628916\",\"SizeBytes\":293,\"StreamViewType\":\"NEW_AND_OLD_IMAGES\",\"dynamoTableName\":\"omni-wt-rt-tracking-notes-dev\"}",
+            "attributes": {
+                "ApproximateReceiveCount": "1",
+                "AWSTraceHeader": "Root=1-658b5f45-c6dfc361159cfd04d0ff415d;Parent=5a71566914ea82cf;Sampled=0;Lineage=f86f2407:0",
+                "SentTimestamp": "1703632710959",
+                "SenderId": "AIDAIT2UOQQY3AUEKVGXU",
+                "ApproximateFirstReceiveTimestamp": "1703632710967"
+            },
+            "messageAttributes": {
+                "FK_UserId": {
+                    "stringValue": "EDI204I",
+                    "stringListValues": [],
+                    "binaryListValues": [],
+                    "dataType": "String"
+                }
+            },
+            "md5OfMessageAttributes": "264ad98c6ac0182565f985104f802847",
+            "md5OfBody": "102cf2e7389eb230bf38e2391e5462ba",
+            "eventSource": "aws:sqs",
+            "eventSourceARN": "arn:aws:sqs:us-east-1:332281781429:omni-coe-table-reader-queue-dev",
+            "awsRegion": "us-east-1"
+        }
+    ]
+}

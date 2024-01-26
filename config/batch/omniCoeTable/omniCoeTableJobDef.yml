@@ -1,0 +1,119 @@
+OmniCoeTableJobBatchTaskExecutionRole:
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: omni-coe-table-role-${self:provider.stage}
+    AssumeRolePolicyDocument:
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ecs-tasks.amazonaws.com]
+          Action: ["sts:AssumeRole"]
+    Path: /
+    Policies:
+      - PolicyName: AmazonECSTaskExecutionRolePolicy
+        PolicyDocument:
+          Statement:
+            - Effect: Allow
+              Action:
+                - "ecr:GetAuthorizationToken"
+                - "ecr:BatchCheckLayerAvailability"
+                - "ecr:GetDownloadUrlForLayer"
+                - "ecr:BatchGetImage"
+                - "logs:CreateLogStream"
+                - "logs:PutLogEvents"
+                - "sns:Publish"
+              Resource: "*"
+      - PolicyName: omni-coe-table-data-retrieval-policy-${self:provider.stage}
+        PolicyDocument:
+          Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:Query
+                - dynamodb:Scan
+                - dynamodb:GetItem
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+              Resource: 
+                - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-coe-table-staging-table-${self:provider.stage}']]
+                - !Join ['', ['arn:aws:dynamodb:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':table/omni-coe-table-staging-table-${self:provider.stage}/*']]
+      - PolicyName: omni-coe-table-redshift-update-batch-task-policy-${self:provider.stage}
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+              - 'redshift:*'
+              - 'redshift-serverless:*'
+            Resource: 
+              - !Join ['', ['arn:aws:redshift:', !Ref 'AWS::Region', ':', !Ref 'AWS::AccountId', ':namespace:aa8190c0-9f2e-4e7c-a92d-c535460f552e']]
+
+OmniCoeTableJobDefinition:
+  Type: AWS::Batch::JobDefinition
+  Properties:
+    JobDefinitionName: omni-coe-table-job-definition-${self:provider.stage}
+    Type: container
+    RetryStrategy:
+      Attempts: 1
+    PlatformCapabilities:
+      - FARGATE
+    ContainerProperties:
+      Command:
+        - node
+        - coeTableBatch.js
+      ResourceRequirements:
+        - Value: 1
+          Type: VCPU
+        - Value: 2048
+          Type: MEMORY
+      Environment:
+        - Name: REGION
+          Value: ${self:provider.region}
+        - Name: ENV_STAGE_NAME
+          Value: ${self:provider.stage}
+        - Name: DB_HOST
+          Value: ${ssm:/omni-eco-transit/${self:provider.stage}/redshift/host}
+        - Name: DB_PORT
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_PORT}
+        - Name: DB_USER
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_USER}
+        - Name: DB_PASSWORD
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_PASSWORD}
+        - Name: DB_DATABASE
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_DATABASE}
+        - Name: ENTERED_DATE
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/ENTERED_DATE}
+        - Name: COE_TABLE_STAGING_TABLE_NAME
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_NAME}
+        - Name: COE_TABLE_STAGING_TABLE_STATUS_INDEX
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_STATUS_INDEX}
+        - Name: COE_REDSHIFT_TABLE
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_REDSHIFT_TABLE}
+        - Name: ERROR_SNS_ARN
+          Value: ${ssm:/omni-reports/${self:provider.stage}/error-notification/sns/arn}
+      FargatePlatformConfiguration:
+        PlatformVersion: 1.3.0
+      LogConfiguration:
+        LogDriver: awslogs
+        Options:
+          awslogs-group: !Ref OmniCoeTableBatchLogGroup
+          awslogs-region: !Ref AWS::Region
+          awslogs-stream-prefix: omni-coe-table-batch-logs
+      ExecutionRoleArn: !GetAtt 'OmniCoeTableJobBatchTaskExecutionRole.Arn'
+      JobRoleArn: !GetAtt 'OmniCoeTableJobBatchTaskExecutionRole.Arn'
+      Image:
+        Fn::Join:
+          - ""
+          - - Ref: AWS::AccountId
+            - .dkr.ecr.
+            - Ref: AWS::Region
+            - ".amazonaws.com/omni-dwh-pbi-"
+            - ${self:provider.stage}
+            - ":"
+            - latest
+      NetworkConfiguration:
+        AssignPublicIp: ENABLED
+OmniCoeTableBatchLogGroup:
+  Type: AWS::Logs::LogGroup
+  Properties:
+    LogGroupName: omni-coe-table-batch-log-group-${self:provider.stage}
+    RetentionInDays: 7
