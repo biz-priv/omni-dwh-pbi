@@ -71,7 +71,7 @@ OmniCoeTableJobDefinition:
         - Name: ENV_STAGE_NAME
           Value: ${self:provider.stage}
         - Name: DB_HOST
-          Value: ${ssm:/omni-eco-transit/${self:provider.stage}/redshift/host}
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/redshift/host}
         - Name: DB_PORT
           Value: ${ssm:/omni-coe-table/${self:provider.stage}/DB_PORT}
         - Name: DB_USER
