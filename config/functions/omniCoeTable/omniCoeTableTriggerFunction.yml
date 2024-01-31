@@ -1,0 +1,18 @@
+function:
+  name: omni-coe-table-batch-trigger-${self:provider.stage}
+  handler: src/omniCoeTable/trigger-function.handler
+  description: Omni Coe Table  
+  package:
+    patterns:
+      - "!**/*"
+      - "src/omniCoeTable/*.js"
+      - "src/commonFunctions/**"
+  runtime: nodejs18.x
+  layers:
+    - !Ref OmniDWHLayerLambdaLayer
+  events:
+    - schedule: cron(0 4,16 * * ? *)
+  environment:
+    JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
+    JOB_NAME: omni-coe-table-job-${self:provider.stage}
+    JOB_QUEUE: !Ref OmniCoeTableJobQueue

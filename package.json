@@ -1,0 +1,26 @@
+{
+  "name": "omni-dwh-pbi",
+  "version": "1.0.0",
+  "description": "This repo contains the DWH to PBI related data.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bizcloud-experts/omni-dwh-pbi.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bizcloud-experts/omni-dwh-pbi/issues"
+  },
+  "homepage": "https://github.com/bizcloud-experts/omni-dwh-pbi#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1528.0",
+    "lodash.get": "^4.4.2",
+    "pg": "^8.11.3",
+    "serverless-offline": "^13.3.2",
+    "uuid": "^9.0.1"
+  }
+}
