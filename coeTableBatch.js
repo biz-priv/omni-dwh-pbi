@@ -85,8 +85,11 @@ async function insertData(data) {
           JSON.parse(item.date_entered.S), 
           item.file_nbr.S,
         ];
-        
+        const startTime = Date.now();
         await executeQueryOnRedshift(query, values);
+        const endTime = Date.now();
+        const executionTime = endTime - startTime;
+        console.log(`Query executed in ${executionTime} ms`);    
         console.info('All data inserted successfully:');
         // Update the status flag column in the dynamodb table
         const updateParams = {
