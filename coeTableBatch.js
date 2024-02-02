@@ -37,7 +37,7 @@ async function fetchData(){
             '#status': 'status'
         },
         ExpressionAttributeValues: {
-            ':status': { S: 'Completed' }
+            ':status': { S: 'Pending' }
         }
     };
     try{
@@ -125,7 +125,7 @@ async function insertData(records) {
                       PutRequest: {
                           Item: {
                               id: get(item, 'id.S', ''),
-                              status: 'Pending'
+                              status: 'Completed'
                           }
                       }
                   }))
