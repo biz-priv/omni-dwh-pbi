@@ -19,8 +19,9 @@ async function handlerAsyncFunction() {
         //await updateStatusInDynamoDB(recordsToProcess);
     }
     } catch (error) {
-        const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
-      await publishErrorMessageToSNS(functionName,error);
+      console.log("error",error)
+      //   const functionName = 'omni-coe-batch-' + process.env.ENV_STAGE_NAME;
+      // await publishErrorMessageToSNS(functionName,error);
       process.exit(1);
     }
 }
@@ -36,11 +37,15 @@ async function fetchData(){
             '#status': 'status'
         },
         ExpressionAttributeValues: {
-            ':status': { S: 'Pending' }
+            ':status': { S: 'Completed' }
         }
     };
     try{
+      const startTime = Date.now();
         const result = await executeQuery(params);
+        const endTime = Date.now();
+        const executionTime = endTime - startTime;
+        console.log(`Fetching pending data from dynamodb table: ${executionTime} ms`);
         return get(result, 'Items', []);
     }
     catch(error){
@@ -48,72 +53,165 @@ async function fetchData(){
         throw error;
     }
 }
+async function insertData(records) {
+  const redshiftTableName = 'coe_test';
+  const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
 
-async function insertData(data) {
-    const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
-    const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
-    try {
+  try {
       await connectToRedshift();
-      const results = await Promise.all(data.map(async (item) => {
-        const query = `
-          INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
-          SELECT
-              $1 AS userid,
-              $2 AS housebill,
-              TO_DATE($3, 'YYYY-MM-DD') AS date_entered,
-              $4 AS file_nbr,
-              CURRENT_TIMESTAMP AS load_create_date,
-              CURRENT_TIMESTAMP AS load_update_date
-          WHERE NOT EXISTS (
-              SELECT 1
-              FROM ${redshiftTableName}
-              WHERE
-                  userid = $5 AND
-                  housebill = $6 AND
-                  date_entered = TO_DATE($7, 'YYYY-MM-DD') AND
-                  file_nbr = $8
-          );
-        `;
-            
-        const values = [
-          item.User_id.S,
-          item.housebill.S,
-          JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
-          item.User_id.S,
-          item.housebill.S,
-          JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
-        ];
-        const startTime = Date.now();
-        await executeQueryOnRedshift(query, values);
-        const endTime = Date.now();
-        const executionTime = endTime - startTime;
-        console.log(`Query executed in ${executionTime} ms`);    
-        console.info('All data inserted successfully:');
-        // Update the status flag column in the dynamodb table
-        const updateParams = {
-            TableName: dynamodbTableName,
-            Key: {
-                id: get(item, 'id.S', ''), 
-            },
-            UpdateExpression: 'SET #status = :newStatus',
-            ExpressionAttributeNames: {
-                '#status': 'status',
-            },
-            ExpressionAttributeValues: {
-                ':newStatus': 'Completed'
-            },
-        };
-        await updateItem(updateParams);
-        console.info(`Record with id ${item.id.S} updated in DynamoDB`);
+
+      // Divide records into smaller batches for parallel processing
+      const batchSize = 1000;
+      const batches = [];
+      for (let i = 0; i < records.length; i += batchSize) {
+          batches.push(records.slice(i, i + batchSize));
+      }
+
+      // Process batches in parallel
+      await Promise.all(batches.map(async (batch) => {
+        const batchStartTime = Date.now();
+          const insertQueries = batch.map(async (item) => {
+            const query = `
+                INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
+                SELECT
+                    $1 AS userid,
+                    $2 AS housebill,
+                    TO_DATE($3, 'YYYY-MM-DD') AS date_entered,
+                    $4 AS file_nbr,
+                    CURRENT_TIMESTAMP AS load_create_date,
+                    CURRENT_TIMESTAMP AS load_update_date
+                WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM ${redshiftTableName}
+                    WHERE
+                        userid = $5 AND
+                        housebill = $6 AND
+                        date_entered = TO_DATE($7, 'YYYY-MM-DD') AND
+                        file_nbr = $8
+                );
+            `;
+
+            const values = [
+                item.User_id.S,
+                item.housebill.S,
+                JSON.parse(item.date_entered.S),
+                item.file_nbr.S,
+                item.User_id.S,
+                item.housebill.S,
+                JSON.parse(item.date_entered.S),
+                item.file_nbr.S,
+            ];
+
+            // Execute insert query asynchronously
+            const startTimeForRedshift=Date.now();
+            await executeQueryOnRedshift(query, values);
+            const endTimeForRedshift=Date.now();
+            const batchRedshiftInsertExecutionTime = endTimeForRedshift - startTimeForRedshift;
+            console.log(`Batch execution time: ${batchRedshiftInsertExecutionTime} ms`);
+        });
+
+          // Execute insert queries in parallel
+          await Promise.all(insertQueries);
+
+          // Log end time for the batch
+          const batchEndTime = Date.now();
+          const batchExecutionTime = batchEndTime - batchStartTime;
+          console.log(`Batch execution time: ${batchExecutionTime} ms`);
+
+          // Update status in DynamoDB for each record
+          const updateParams = {
+              RequestItems: {
+                  [dynamodbTableName]: batch.map(item => ({
+                      PutRequest: {
+                          Item: {
+                              id: get(item, 'id.S', ''),
+                              status: 'Pending'
+                          }
+                      }
+                  }))
+              }
+          };
+          const dynamoUpdateStartTime=Date.now();
+          await executeQuery(updateParams);
+          const dynamoUpdateEndTime=Date.now();
+          const dynamoUpdateExecutionTime = dynamoUpdateEndTime - dynamoUpdateStartTime;
+          console.log(`dynamoUpdate execution time: ${dynamoUpdateExecutionTime} ms`);          
       }));
-    } catch (error) {
-      console.error('Error inserting data:', error);
-      throw error
-    } finally {
+
+      console.info('All data processed successfully.');
+
+  } catch (error) {
+      console.error('Error processing records:', error);
+      throw error;
+  } finally {
       await disconnectFromRedshift();
-    }
   }
+}
+// async function insertData(data) {
+//     const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
+//     const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
+//     try {
+//       await connectToRedshift();
+//       const results = await Promise.all(data.map(async (item) => {
+//         const query = `
+//           INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
+//           SELECT
+//               $1 AS userid,
+//               $2 AS housebill,
+//               TO_DATE($3, 'YYYY-MM-DD') AS date_entered,
+//               $4 AS file_nbr,
+//               CURRENT_TIMESTAMP AS load_create_date,
+//               CURRENT_TIMESTAMP AS load_update_date
+//           WHERE NOT EXISTS (
+//               SELECT 1
+//               FROM ${redshiftTableName}
+//               WHERE
+//                   userid = $5 AND
+//                   housebill = $6 AND
+//                   date_entered = TO_DATE($7, 'YYYY-MM-DD') AND
+//                   file_nbr = $8
+//           );
+//         `;
+            
+//         const values = [
+//           item.User_id.S,
+//           item.housebill.S,
+//           JSON.parse(item.date_entered.S), 
+//           item.file_nbr.S,
+//           item.User_id.S,
+//           item.housebill.S,
+//           JSON.parse(item.date_entered.S), 
+//           item.file_nbr.S,
+//         ];
+//         const startTime = Date.now();
+//         await executeQueryOnRedshift(query, values);
+//         const endTime = Date.now();
+//         const executionTime = endTime - startTime;
+//         console.log(`Query executed in ${executionTime} ms`);    
+//         console.info('All data inserted successfully:');
+//         // Update the status flag column in the dynamodb table
+//         const updateParams = {
+//             TableName: dynamodbTableName,
+//             Key: {
+//                 id: get(item, 'id.S', ''), 
+//             },
+//             UpdateExpression: 'SET #status = :newStatus',
+//             ExpressionAttributeNames: {
+//                 '#status': 'status',
+//             },
+//             ExpressionAttributeValues: {
+//                 ':newStatus': 'Completed'
+//             },
+//         };
+//         await updateItem(updateParams);
+//         console.info(`Record with id ${item.id.S} updated in DynamoDB`);
+//       }));
+//     } catch (error) {
+//       console.error('Error inserting data:', error);
+//       throw error
+//     } finally {
+//       await disconnectFromRedshift();
+//     }
+//   }
   await handlerAsyncFunction();
 })();
