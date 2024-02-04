@@ -35,7 +35,7 @@ exports.handler = async (event) => {
 async function listJobs(jobQueue, jobName) {
     const params = {
         jobQueue: jobQueue,
-        jobStatus: ['RUNNING', 'PENDING', 'STARTING', 'SUBMITTED', 'SUCCEEDED']
+        jobStatus: 'RUNNING'
     };
     const data = await batch.listJobs(params).promise();
     return data.jobSummaryList;
