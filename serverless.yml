@@ -17,6 +17,7 @@ provider:
         Effect: Allow
         Action:
         - "batch:SubmitJob"
+        - "batch:ListJobs"
         Resource: 
         - "*"
       - 
