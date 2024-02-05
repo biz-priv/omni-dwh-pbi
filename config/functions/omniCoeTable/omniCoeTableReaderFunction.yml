@@ -18,5 +18,6 @@ function:
     ERROR_SNS_ARN: ${ssm:/omni-reports/${self:provider.stage}/error-notification/sns/arn} 
     TRACKING_NOTES_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/tracking-notes/ddb.tableName}
     SHIPMENT_HEADER_TABLE_NAME: ${ssm:/omni-wt-rt-updates/${self:provider.stage}/shipment-header/ddb.tableName}  
-    COE_TABLE_STAGING_TABLE_NAME: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_NAME}
+    # COE_TABLE_STAGING_TABLE_NAME: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_NAME}
+    COE_TABLE_STAGING_TABLE_NAME: 'omni-coe-staging-table-dev'
     DATE_THRESHOLD: ${ssm:/omni-coe-table/${self:provider.stage}/ENTERED_DATE}
