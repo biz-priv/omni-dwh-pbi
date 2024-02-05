@@ -15,6 +15,7 @@ async function handlerAsyncFunction() {
     // Batch logic
     const recordsToProcess = await fetchData();
     if (recordsToProcess.length > 0) {
+        console.log("inside the if block")
         await insertData(recordsToProcess);
         //await updateStatusInDynamoDB(recordsToProcess);
     }
@@ -56,6 +57,7 @@ async function insertData(data) {
     try {
       await connectToRedshift();
       const results = await Promise.all(data.map(async (item) => {
+        console.log("inside the promis all loop")
         const query = `
           INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
           SELECT
