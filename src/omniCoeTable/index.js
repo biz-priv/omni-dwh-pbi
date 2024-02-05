@@ -52,9 +52,13 @@ exports.handler = async (event, context) => {
                         housebill !== '') {
                             const checkParams = {
                                 TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
-                                KeyConditionExpression: 'compositeKey = :compositeKey',
+                                IndexName: 'compositeKey-index',
+                                KeyConditionExpression: '#compositeKey = :compositeKey',
+                                ExpressionAttributeNames: {
+                                    '#compositeKey': 'compositeKey'
+                                },
                                 ExpressionAttributeValues: {
-                                    ':compositeKey': compositeKey
+                                    ':compositeKey': { S: compositeKey }
                                 }
                             };
                             const existingRecord = await executeQuery(checkParams);
