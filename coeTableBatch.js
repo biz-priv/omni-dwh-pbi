@@ -85,9 +85,12 @@ async function insertData(data) {
           JSON.parse(item.date_entered.S), 
           item.file_nbr.S,
         ];
-        
+        const redshiftStartTime=Date.now();
         await executeQueryOnRedshift(query, values);
-        console.info('All data inserted successfully:');
+        const redshiftEndTime = Date.now();
+        const redshiftExecutionTime = redshiftEndTime - redshiftStartTime;
+        console.info(`Redshift execution time: ${redshiftExecutionTime} ms`);
+        console.info('Record inserted into redshift:');
         // Update the status flag column in the dynamodb table
         const updateParams = {
             TableName: dynamodbTableName,
@@ -102,7 +105,11 @@ async function insertData(data) {
                 ':newStatus': 'Completed'
             },
         };
+        const startTime = Date.now();
         await updateItem(updateParams);
+        const endTime = Date.now();
+        const executionTime = endTime - startTime;
+        console.info(`Updation of dynamodb record execution time: ${executionTime} ms`);
         console.info(`Record with id ${item.id.S} updated in DynamoDB`);
       }));
     } catch (error) {
