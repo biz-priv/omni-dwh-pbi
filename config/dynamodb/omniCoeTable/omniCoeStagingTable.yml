@@ -1,4 +1,4 @@
-omniCoeTableStagingTable:
+omniCoeStagingTable:
   Type: AWS::DynamoDB::Table
   Properties:
     TableName: omni-coe-staging-table-${self:provider.stage}
