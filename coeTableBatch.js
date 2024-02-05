@@ -41,6 +41,7 @@ async function fetchData(){
     };
     try{
         const result = await executeQuery(params);
+        console.log("dynamodb result",result)
         return get(result, 'Items', []);
     }
     catch(error){
