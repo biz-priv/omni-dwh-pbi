@@ -64,7 +64,7 @@ exports.handler = async (event, context) => {
                             };
                             const existingRecord = await executeQuery(checkParams);
                             console.log("existingRecord",existingRecord);
-                        if (!existingRecord.Item) {
+                        if (!existingRecord) {
                             console.log("inside the !existingRecord.Item")
                             // Insert into the staging table if the combination is unique
 
