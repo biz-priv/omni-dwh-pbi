@@ -62,7 +62,9 @@ exports.handler = async (event, context) => {
                                 }
                             };
                             const existingRecord = await executeQuery(checkParams);
+                            console.log("existingRecord",existingRecord);
                         if (!existingRecord.Item) {
+                            console.log("inside the !existingRecord.Item")
                             // Insert into the staging table if the combination is unique
                             const compositeKey = `${file_nbr}-${userid}-${JSON.stringify(curRecordDateTimeEntered)}-${housebill}`;
                             const omniCoeTableParams = {
@@ -77,6 +79,7 @@ exports.handler = async (event, context) => {
                                     compositeKey: compositeKey
                                 }
                             };
+                            console.log("payload that is added",omniCoeTableParams);
                             await putItem(omniCoeTableParams);
                             console.info("Record is inserted successfully");
                         } else {
