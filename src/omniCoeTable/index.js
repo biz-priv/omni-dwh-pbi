@@ -37,8 +37,8 @@ exports.handler = async (event, context) => {
                         }
                     },
                 };
-                const headerResult = await executeQuery(headerparams);
-                const items = get(headerResult, 'Items', []);
+                const items = await executeQuery(headerparams);
+                // const items = get(headerResult, 'Items', []);
                 console.info("items", items);
                 let housebill = get(items, '[0].Housebill.S', '');
                 if (housebill !== '0') {
