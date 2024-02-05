@@ -53,75 +53,74 @@ async function fetchData(){
 }
 
 async function insertData(data) {
-    const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
-    const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
+    const redshiftTableName = process.env.COE_REDSHIFT_TABLE;
+    const dynamodbTableName = 'omni-coe-staging-table-dev';
     try {
-      await connectToRedshift();
-      const results = await Promise.all(data.map(async (item) => {
-        console.log("inside the promis all loop")
-        const query = `
-          INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
-          SELECT
-              $1 AS userid,
-              $2 AS housebill,
-              TO_DATE($3, 'YYYY-MM-DD') AS date_entered,
-              $4 AS file_nbr,
-              CURRENT_TIMESTAMP AS load_create_date,
-              CURRENT_TIMESTAMP AS load_update_date
-          WHERE NOT EXISTS (
-              SELECT 1
-              FROM ${redshiftTableName}
-              WHERE
-                  userid = $5 AND
-                  housebill = $6 AND
-                  date_entered = TO_DATE($7, 'YYYY-MM-DD') AND
-                  file_nbr = $8
-          );
+        await connectToRedshift();
+
+        // Prepare data for bulk insert
+        const values = data.map(item => [
+            item.User_id.S,
+            item.housebill.S,
+            JSON.parse(item.date_entered.S),
+            item.file_nbr.S,
+            'CURRENT_TIMESTAMP',
+            'CURRENT_TIMESTAMP'
+        ]);
+
+        // Construct the insert statement with numbered placeholders
+        const insertQuery = `
+            INSERT INTO ${redshiftTableName} (
+                userid, 
+                housebill, 
+                date_entered, 
+                file_nbr, 
+                load_create_date, 
+                load_update_date
+            )
+            VALUES 
+                ${values.map(() => '(?,?,?,?,?,?)').join(',\n')};
         `;
-            
-        const values = [
-          item.User_id.S,
-          item.housebill.S,
-          JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
-          item.User_id.S,
-          item.housebill.S,
-          JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
-        ];
-        const redshiftStartTime=Date.now();
-        await executeQueryOnRedshift(query, values);
+
+        // Flatten the values array for passing to the executeQueryOnRedshift function
+        const flattenedValues = values.flat();
+
+        // Execute the insert statement with numbered placeholders
+        const redshiftStartTime = Date.now();
+        await executeQueryOnRedshift(insertQuery, flattenedValues);
         const redshiftEndTime = Date.now();
         const redshiftExecutionTime = redshiftEndTime - redshiftStartTime;
         console.info(`Redshift execution time: ${redshiftExecutionTime} ms`);
-        console.info('Record inserted into redshift:');
-        // Update the status flag column in the dynamodb table
-        const updateParams = {
-            TableName: dynamodbTableName,
-            Key: {
-                id: get(item, 'id.S', ''), 
-            },
-            UpdateExpression: 'SET #status = :newStatus',
-            ExpressionAttributeNames: {
-                '#status': 'status',
-            },
-            ExpressionAttributeValues: {
-                ':newStatus': 'Completed'
-            },
-        };
-        const startTime = Date.now();
-        await updateItem(updateParams);
-        const endTime = Date.now();
-        const executionTime = endTime - startTime;
-        console.info(`Updation of dynamodb record execution time: ${executionTime} ms`);
-        console.info(`Record with id ${item.id.S} updated in DynamoDB`);
-      }));
+        console.info('Records inserted into Redshift.');
+
+        // Update the status flag column in the dynamodb table for each item
+        for (const item of data) {
+            const updateParams = {
+                TableName: dynamodbTableName,
+                Key: {
+                    id: get(item, 'id.S', ''),
+                },
+                UpdateExpression: 'SET #status = :newStatus',
+                ExpressionAttributeNames: {
+                    '#status': 'status',
+                },
+                ExpressionAttributeValues: {
+                    ':newStatus': 'Completed'
+                },
+            };
+            const startTime = Date.now();
+            await updateItem(updateParams);
+            const endTime = Date.now();
+            const executionTime = endTime - startTime;
+            console.info(`Updation of dynamodb record execution time: ${executionTime} ms`);
+            console.info(`Record with id ${item.id.S} updated in DynamoDB`);
+        }
     } catch (error) {
-      console.error('Error inserting data:', error);
-      throw error
+        console.error('Error inserting data:', error);
+        throw error;
     } finally {
-      await disconnectFromRedshift();
+        await disconnectFromRedshift();
     }
-  }
+}
   await handlerAsyncFunction();
 })();

@@ -67,7 +67,6 @@ exports.handler = async (event, context) => {
                         if (!existingRecord||existingRecord.length === 0) {
                             console.log("inside the !existingRecord.Item")
                             // Insert into the staging table if the combination is unique
-
                             const omniCoeTableParams = {
                                 TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
                                 Item: {
