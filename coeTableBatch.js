@@ -14,6 +14,7 @@ async function handlerAsyncFunction() {
   try {
     // Batch logic
     const recordsToProcess = await fetchData();
+    console.log("recordsToProcess",recordsToProcess);
     if (recordsToProcess.length > 0) {
         console.log("inside the if block")
         await insertData(recordsToProcess);
@@ -43,7 +44,7 @@ async function fetchData(){
     try{
         const result = await executeQuery(params);
         console.log("dynamodb result",result)
-        return get(result, 'Items', []);
+        return result;
     }
     catch(error){
         console.error("An error occurred while attempting to fetch data from the Omni COE staging table(Function name:fetchData, fileName:coeTableBatch.js). Error details:", error);
