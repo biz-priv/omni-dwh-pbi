@@ -1,11 +1,12 @@
 const AWS = require("aws-sdk");
 const batch = new AWS.Batch();
+const {publishErrorMessageToSNS}=require("./../commonFunctions/helpers");
 /*
 1. Check if a job with the same name is already running in the job queue
 2. If no job with the same name is running, submit the new job
 3. Else don't trigger the job
 */
-exports.handler = async (event) => {
+exports.handler = async (event, context) => {
     try {
         const jobName = process.env.JOB_NAME;
         const jobQueue = process.env.JOB_QUEUE;
@@ -28,7 +29,8 @@ exports.handler = async (event) => {
         }
     } catch (error) {
         console.error("Error submitting job:", error);
-        throw error;
+        const functionName=context.functionName
+        await publishErrorMessageToSNS(functionName,error);
     }
 };
 

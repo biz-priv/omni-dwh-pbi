@@ -13,6 +13,7 @@ function errorResponse(httpStatus, message) {
 async function publishErrorMessageToSNS(functionName,error) {
   const params = {
     Message: `An error occurred in ${functionName}. Error details: ${error}.`,
+    Subject: `Lambda function ${functionName} has failed.`,
     TopicArn: process.env.ERROR_SNS_ARN,
   };
   try {
