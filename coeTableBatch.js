@@ -54,7 +54,7 @@ async function fetchData(){
 
 async function insertData(data) {
     const redshiftTableName = process.env.COE_REDSHIFT_TABLE;
-    const dynamodbTableName = 'omni-coe-staging-table-dev';
+    const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
     try {
         await connectToRedshift();
 
