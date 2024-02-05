@@ -50,6 +50,7 @@ exports.handler = async (event, context) => {
                         file_nbr !== '' &&
                         date_entered !== '' &&
                         housebill !== '') {
+                            const compositeKey = `${file_nbr}-${userid}-${JSON.stringify(curRecordDateTimeEntered)}-${housebill}`;
                             const checkParams = {
                                 TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
                                 IndexName: 'compositeKey-index',
@@ -66,7 +67,7 @@ exports.handler = async (event, context) => {
                         if (!existingRecord.Item) {
                             console.log("inside the !existingRecord.Item")
                             // Insert into the staging table if the combination is unique
-                            const compositeKey = `${file_nbr}-${userid}-${JSON.stringify(curRecordDateTimeEntered)}-${housebill}`;
+
                             const omniCoeTableParams = {
                                 TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
                                 Item: {
