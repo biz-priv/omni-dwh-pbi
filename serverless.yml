@@ -66,7 +66,7 @@ resources:
     omniCoeTableReaderSubscription: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderSubscription}
     omniCoeTableReaderQueuePolicy: ${file(config/queues/omniCoeTableReader.yml):omniCoeTableReaderQueuePolicy}
     omniCoeTableStagingTable: ${file(config/dynamodb/omniCoeTable/omniCoeTableStagingTable.yml):omniCoeTableStagingTable}
-    # omniCoeStagingTable: ${file(config/dynamodb/omniCoeTable/omniCoeStagingTable.yml):omniCoeStagingTable}
+    omniCoeStagingTable: ${file(config/dynamodb/omniCoeTable/omniCoeStagingTable.yml):omniCoeStagingTable}
     OmniCoeTableBatchServiceRole: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableBatchServiceRole}
     OmniCoeTableComputeEnvironment: ${file(config/batch/omniCoeTable/omniCoeTableComputeEnvironment.yml):OmniCoeTableComputeEnvironment}
     OmniCoeTableJobQueue: ${file(config//batch/omniCoeTable/omniCoeTableJobQueue.yml):OmniCoeTableJobQueue}
