@@ -50,7 +50,8 @@ exports.handler = async (event, context) => {
                         file_nbr !== '' &&
                         date_entered !== '' &&
                         housebill !== '') {
-                            const compositeKey = `${file_nbr}-${userid}-${JSON.stringify(curRecordDateTimeEntered)}-${housebill}`;
+                            const dateEnteredString = curRecordDateTimeEntered.toISOString().split('T')[0];
+                            const compositeKey = `${file_nbr}-${userid}-${dateEnteredString}-${housebill}`;
                             const checkParams = {
                                 TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
                                 IndexName: 'compositeKey-index',
