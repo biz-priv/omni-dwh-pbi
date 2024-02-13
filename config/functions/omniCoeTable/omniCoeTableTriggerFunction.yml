@@ -13,6 +13,6 @@ function:
   # events:
   #   - schedule: cron(0 4,16 * * ? *)
   environment:
-    JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
-    JOB_NAME: omni-coe-table-job-${self:provider.stage}
-    JOB_QUEUE: !Ref OmniCoeTableJobQueue
+    JOB_DEFINITION: !Ref OmniCoeTableHistoricalDataJobDefinition
+    JOB_NAME: omni-coe-table-historical-data-job-${self:provider.stage}
+    JOB_QUEUE: !Ref OmniCoeTableHistoricalDataJobQueue
