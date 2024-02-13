@@ -107,6 +107,7 @@ OmniCoeTableHistoricalDataJobDefinition:
             - .dkr.ecr.
             - Ref: AWS::Region
             - ".amazonaws.com/coe-batch-hostorical-data-"
+            - ${self:provider.stage}
             - ":"
             - latest
       NetworkConfiguration:
