@@ -106,8 +106,7 @@ OmniCoeTableHistoricalDataJobDefinition:
           - - Ref: AWS::AccountId
             - .dkr.ecr.
             - Ref: AWS::Region
-            - ".amazonaws.com/omni-dwh-pbi-"
-            - ${self:provider.stage}
+            - ".amazonaws.com/coe-batch-hostorical-data-"
             - ":"
             - latest
       NetworkConfiguration:
