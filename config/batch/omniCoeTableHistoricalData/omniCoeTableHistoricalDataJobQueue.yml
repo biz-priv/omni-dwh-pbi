@@ -1,0 +1,10 @@
+OmniCoeTableHistoricalDataJobQueue:
+  Type: AWS::Batch::JobQueue
+  Properties:
+    JobQueueName: omni-coe-table-historical-data-job-queue-${self:provider.stage}
+    ComputeEnvironmentOrder:
+      - Order: 1
+        ComputeEnvironment:
+          Ref: OmniCoeTableHistoricalDataComputeEnvironment
+    State: ENABLED
+    Priority: 1
