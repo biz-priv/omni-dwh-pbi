@@ -69,7 +69,7 @@ resources:
     OmniCoeTableJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobBatchTaskExecutionRole}
     OmniCoeTableBatchLogGroup: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableBatchLogGroup}
     OmniCoeTableJobDefinition: ${file(config/batch/omniCoeTable/omniCoeTableJobDef.yml):OmniCoeTableJobDefinition}
-    OmniCoeTableHistoricalDataBatchServiceRole: ${file(config/batch/omniCoeTableHistoricalData/omniCoeTableHistoricalDataComputeEnvironment.yml):OmniCoeTableBatchHistoricalDataServiceRole}
+    OmniCoeTableBatchHistoricalDataServiceRole: ${file(config/batch/omniCoeTableHistoricalData/omniCoeTableHistoricalDataComputeEnvironment.yml):OmniCoeTableBatchHistoricalDataServiceRole}
     OmniCoeTableHistoricalDataComputeEnvironment: ${file(config/batch/omniCoeTableHistoricalData/omniCoeTableHistoricalDataComputeEnvironment.yml):OmniCoeTableHistoricalDataComputeEnvironment}
     OmniCoeTableHistoricalDataJobQueue: ${file(config/batch/omniCoeTableHistoricalData/omniCoeTableHistoricalDataJobQueue.yml):OmniCoeTableHistoricalDataJobQueue}
     OmniCoeTableHistoricalDataJobBatchTaskExecutionRole: ${file(config/batch/omniCoeTableHistoricalData/omniCoeTableHistoricalDataJobDef.yml):OmniCoeTableHistoricalDataJobBatchTaskExecutionRole}
