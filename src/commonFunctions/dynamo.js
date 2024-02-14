@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const DynamoDBClient = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
+const get = require('lodash.get');
 const {errorResponse}=require('./helpers')
 
 async function putItem(params) {
@@ -38,8 +39,8 @@ async function executeQuery(params) {
               params.ExclusiveStartKey = lastEvaluatedKey;
           }
           const data = await DynamoDB.query(params).promise();
-          items = items.concat(data.Items);
-          lastEvaluatedKey = data.LastEvaluatedKey;
+          items = items.concat(get(data, 'Items', []));
+          lastEvaluatedKey = get(data, 'LastEvaluatedKey', null);;
       } while (lastEvaluatedKey);
       return items;
   } catch (error) {
