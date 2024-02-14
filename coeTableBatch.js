@@ -27,7 +27,7 @@ async function handlerAsyncFunction() {
 }
 async function fetchData(){
     // Fetch data from dynamodb table where the status is Pending
-    const tableName='omni-coe-staging-table-dev';
+    const tableName=process.env.COE_TABLE_STAGING_TABLE_NAME;
     const indexName=process.env.COE_TABLE_STAGING_TABLE_STATUS_INDEX;
     const params = {
         TableName: tableName,
