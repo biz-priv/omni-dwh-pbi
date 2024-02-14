@@ -85,7 +85,7 @@ OmniCoeTableJobDefinition:
         - Name: ENTERED_DATE
           Value: ${ssm:/omni-coe-table/${self:provider.stage}/ENTERED_DATE}
         - Name: COE_TABLE_STAGING_TABLE_NAME
-          Value: 'omni-coe-staging-table-dev'
+          Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_NAME}
         - Name: COE_TABLE_STAGING_TABLE_STATUS_INDEX
           Value: ${ssm:/omni-coe-table/${self:provider.stage}/COE_TABLE_STAGING_TABLE_STATUS_INDEX}
         - Name: COE_REDSHIFT_TABLE

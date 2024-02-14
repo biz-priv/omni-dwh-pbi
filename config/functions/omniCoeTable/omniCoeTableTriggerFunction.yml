@@ -10,8 +10,8 @@ function:
   runtime: nodejs18.x
   layers:
     - !Ref OmniDWHLayerLambdaLayer
-  # events:
-  #   - schedule: cron(0 4,16 * * ? *)
+  events:
+    - schedule: cron(0 * * ? * *)
   environment:
     JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
     JOB_NAME: omni-coe-table-job-${self:provider.stage}

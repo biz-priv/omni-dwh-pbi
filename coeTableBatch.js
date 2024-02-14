@@ -52,12 +52,12 @@ async function fetchData(){
 
 async function insertData(data) {
     const redshiftTableName=process.env.COE_REDSHIFT_TABLE;
-    const dynamodbTableName = 'omni-coe-staging-table-dev';
+    const dynamodbTableName = process.env.COE_TABLE_STAGING_TABLE_NAME;
     try {
       await connectToRedshift();
       const results = await Promise.all(data.map(async (item) => {
         const query = `
-          INSERT INTO coe_test (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
+          INSERT INTO ${redshiftTableName} (userid, housebill, date_entered, file_nbr, load_create_date, load_update_date)
           SELECT
               $1 AS userid,
               $2 AS housebill,
