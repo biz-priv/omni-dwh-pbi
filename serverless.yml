@@ -18,6 +18,7 @@ provider:
         Action:
         - "batch:SubmitJob"
         - "batch:ListJobs"
+        - "lambda:InvokeFunction"
         Resource: 
         - "*"
       - 
