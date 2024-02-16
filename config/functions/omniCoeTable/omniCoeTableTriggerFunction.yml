@@ -11,7 +11,8 @@ function:
   layers:
     - !Ref OmniDWHLayerLambdaLayer
   events:
-    - schedule: cron(0 * * ? * *)
+    - schedule:
+        rate: rate(1 hour)
   environment:
     JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
     JOB_NAME: omni-coe-table-job-${self:provider.stage}
