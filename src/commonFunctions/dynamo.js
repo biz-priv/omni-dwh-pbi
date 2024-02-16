@@ -1,6 +1,7 @@
 const AWS = require("aws-sdk");
 const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const DynamoDBClient = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
+const get = require('lodash.get');
 const {errorResponse}=require('./helpers')
 
 async function putItem(params) {
@@ -8,7 +9,7 @@ async function putItem(params) {
     return await DynamoDBClient.put(params).promise();
   } catch (e) {
     console.error("Put Item Error:", e, "\nPut params:", params);
-    throw errorResponse(500, "Error while putting item.");
+    throw e;
   }
 }
 
@@ -17,7 +18,7 @@ async function getItem(params) {
     return await DynamoDB.get(params).promise();
   } catch (e) {
     console.error("Get Item Error:", e, "\nGet params:", params);
-    throw errorResponse(500, "Error while getting item.");
+    throw e;
   }
 }
 async function updateItem(params){
@@ -25,16 +26,26 @@ async function updateItem(params){
       await DynamoDBClient.update(params).promise();
   } catch(e){
     console.error("Query Item Error:", e, "\nQuery params:", params);
-    throw errorResponse(500, "Error while executing query.");
+    throw e;
   }
 }
 
 async function executeQuery(params) {
   try {
-    return await DynamoDB.query(params).promise();
-  } catch (e) {
-    console.error("Query Item Error:", e, "\nQuery params:", params);
-    throw errorResponse(500, "Error while executing query.");
+      let items = [];
+      let lastEvaluatedKey = null;
+      do {
+          if (lastEvaluatedKey) {
+              params.ExclusiveStartKey = lastEvaluatedKey;
+          }
+          const data = await DynamoDB.query(params).promise();
+          items = items.concat(get(data, 'Items', []));
+          lastEvaluatedKey = get(data, 'LastEvaluatedKey', null);;
+      } while (lastEvaluatedKey);
+      return items;
+  } catch (error) {
+      console.error("Query Item Error:", error, "\nQuery params:", params);
+      throw error
   }
 }
 

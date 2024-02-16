@@ -10,6 +10,7 @@ const sns = new AWS.SNS();
 3. Update status to 'Completed' in DynamoDB
 */
 (async () => {
+    console.time("TotalExecutionTime");
 async function handlerAsyncFunction() {
   try {
     // Batch logic
@@ -41,7 +42,7 @@ async function fetchData(){
     };
     try{
         const result = await executeQuery(params);
-        return get(result, 'Items', []);
+        return result;
     }
     catch(error){
         console.error("An error occurred while attempting to fetch data from the Omni COE staging table(Function name:fetchData, fileName:coeTableBatch.js). Error details:", error);
@@ -64,26 +65,13 @@ async function insertData(data) {
               $4 AS file_nbr,
               CURRENT_TIMESTAMP AS load_create_date,
               CURRENT_TIMESTAMP AS load_update_date
-          WHERE NOT EXISTS (
-              SELECT 1
-              FROM ${redshiftTableName}
-              WHERE
-                  userid = $5 AND
-                  housebill = $6 AND
-                  date_entered = TO_DATE($7, 'YYYY-MM-DD') AND
-                  file_nbr = $8
-          );
         `;
             
         const values = [
           item.User_id.S,
           item.housebill.S,
           JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
-          item.User_id.S,
-          item.housebill.S,
-          JSON.parse(item.date_entered.S), 
-          item.file_nbr.S,
+          item.file_nbr.S
         ];
         
         await executeQueryOnRedshift(query, values);
@@ -113,4 +101,5 @@ async function insertData(data) {
     }
   }
   await handlerAsyncFunction();
+  console.timeEnd("TotalExecutionTime"); 
 })();
