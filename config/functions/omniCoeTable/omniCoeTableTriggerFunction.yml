@@ -10,8 +10,9 @@ function:
   runtime: nodejs18.x
   layers:
     - !Ref OmniDWHLayerLambdaLayer
-  - schedule:
-      rate: rate(5 minutes)
+  events:
+    - schedule:
+        rate: rate(5 minutes)
   environment:
     JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
     JOB_NAME: omni-coe-table-job-${self:provider.stage}
