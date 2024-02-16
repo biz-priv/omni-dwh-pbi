@@ -37,8 +37,8 @@ exports.handler = async (event, context) => {
                         }
                     },
                 };
-                const headerResult = await executeQuery(headerparams);
-                const items = get(headerResult, 'Items', []);
+                const items = await executeQuery(headerparams);
+                // const items = get(headerResult, 'Items', []);
                 console.info("items", items);
                 let housebill = get(items, '[0].Housebill.S', '');
                 if (housebill !== '0') {
@@ -50,20 +50,42 @@ exports.handler = async (event, context) => {
                         file_nbr !== '' &&
                         date_entered !== '' &&
                         housebill !== '') {
-                        // insert into db
-                        const omniCoeTableParams = {
-                            TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
-                            Item: {
-                                id: uuidv4(),
-                                User_id: userid,
-                                file_nbr: file_nbr,
-                                date_entered: JSON.stringify(curRecordDateTimeEntered),
-                                housebill: housebill,
-                                status: "Pending"
-                            }
-                        };
-                        await putItem(omniCoeTableParams);
-                        console.info("record is inserted successfully");
+                            const dateEnteredString = curRecordDateTimeEntered.toISOString().split('T')[0];
+                            const compositeKey = `${file_nbr}-${userid}-${dateEnteredString}-${housebill}`;
+                            const checkParams = {
+                                TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
+                                IndexName: 'compositeKey-index',
+                                KeyConditionExpression: '#compositeKey = :compositeKey',
+                                ExpressionAttributeNames: {
+                                    '#compositeKey': 'compositeKey'
+                                },
+                                ExpressionAttributeValues: {
+                                    ':compositeKey': { S: compositeKey }
+                                }
+                            };
+                            const existingRecord = await executeQuery(checkParams);
+                            console.log("existingRecord",existingRecord);
+                        if (!existingRecord||existingRecord.length === 0) {
+                            console.log("inside the !existingRecord.Item")
+                            // Insert into the staging table if the combination is unique
+                            const omniCoeTableParams = {
+                                TableName: process.env.COE_TABLE_STAGING_TABLE_NAME,
+                                Item: {
+                                    id: uuidv4(),
+                                    User_id: userid,
+                                    file_nbr: file_nbr,
+                                    date_entered: JSON.stringify(curRecordDateTimeEntered),
+                                    housebill: housebill,
+                                    status: "Pending",
+                                    compositeKey: compositeKey
+                                }
+                            };
+                            console.log("payload that is added",omniCoeTableParams);
+                            await putItem(omniCoeTableParams);
+                            console.info("Record is inserted successfully");
+                        } else {
+                            console.info("Record with the same combination already exists. Skipping insertion.");
+                        }
                     }
                 } else {
                     console.info("housebill value is zero");
