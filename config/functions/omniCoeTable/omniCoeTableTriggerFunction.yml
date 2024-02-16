@@ -12,7 +12,7 @@ function:
     - !Ref OmniDWHLayerLambdaLayer
   events:
     - schedule:
-        rate: rate(5 minutes)
+        rate: rate(1 hour)
   environment:
     JOB_DEFINITION: !Ref OmniCoeTableJobDefinition
     JOB_NAME: omni-coe-table-job-${self:provider.stage}
