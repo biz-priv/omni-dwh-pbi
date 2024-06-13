@@ -1,3 +1,10 @@
+/*
+* File: src\commonFunctions\dynamo.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-15
+* Confidential and Proprietary
+*/
 const AWS = require("aws-sdk");
 const DynamoDB = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 const DynamoDBClient = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });

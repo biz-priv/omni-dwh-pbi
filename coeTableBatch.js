@@ -1,3 +1,10 @@
+/*
+* File: coeTableBatch.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-15
+* Confidential and Proprietary
+*/
 const get = require('lodash.get');
 const {publishErrorMessageToSNS}=require("./src/commonFunctions/helpers");
 const {executeQuery, updateItem}=require('./src/commonFunctions/dynamo');
