@@ -1,3 +1,10 @@
+/*
+* File: src\commonFunctions\helpers.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-15
+* Confidential and Proprietary
+*/
 const axios = require('axios');
 const AWS = require('aws-sdk');
 const sns = new AWS.SNS();

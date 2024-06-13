@@ -1,3 +1,10 @@
+/*
+* File: src\omniCoeTable\trigger-function.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-13
+* Confidential and Proprietary
+*/
 const AWS = require("aws-sdk");
 const batch = new AWS.Batch();
 const {publishErrorMessageToSNS}=require("./../commonFunctions/helpers");

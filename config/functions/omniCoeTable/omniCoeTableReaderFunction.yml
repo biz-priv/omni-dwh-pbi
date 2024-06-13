@@ -2,6 +2,8 @@ function:
   name: omni-coe-table-reader-${self:provider.stage}
   handler: src/omniCoeTable/index.handler
   description: Omni Coe Table Reader
+  tags:
+    Name : coe-table-reader
   package:
     patterns:
       - "!**/*"

@@ -1,3 +1,10 @@
+/*
+* File: src\omniCoeTable\index.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-13
+* Confidential and Proprietary
+*/
 const get = require('lodash.get');
 const {
     executeQuery,
