@@ -1,3 +1,10 @@
+/*
+* File: src\commonFunctions\redshift.js
+* Project: Omni-dwh-pbi
+* Author: Bizcloud Experts
+* Date: 2024-02-15
+* Confidential and Proprietary
+*/
 const { Client } = require('pg');
 const { errorResponse } = require('./helpers');
 

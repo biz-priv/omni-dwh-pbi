@@ -9,6 +9,10 @@ provider:
   region: us-east-1
   timeout: 30
   memorySize: 256
+  stackTags:
+    Application: Omni dwh to pbi
+    CreateBy: BizCloudExperts
+    Environment: ${self:provider.stage}  
   iam:
     role:
       name: omni-coe-table-${self:provider.stage}-role
